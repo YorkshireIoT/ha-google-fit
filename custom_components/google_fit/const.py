@@ -13,6 +13,7 @@ MANUFACTURER: Final = "Google, Inc."
 # Required Scopes
 DATA_AUTH: Final = "auth"
 DEFAULT_ACCESS = [
+    "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/fitness.activity.read",
     "https://www.googleapis.com/auth/fitness.body.read",
     "https://www.googleapis.com/auth/fitness.nutrition.read",

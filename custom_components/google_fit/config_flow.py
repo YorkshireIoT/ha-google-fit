@@ -92,6 +92,7 @@ class OAuth2FlowHandler(
             (await self.hass.async_add_executor_job(_check_fit_access))
             email = (await self.hass.async_add_executor_job(_get_profile))["email"]
         except GoogleApiError as ex:
+            self.logger.error("API Access Error: %s", ex.reason)
             return self.async_abort(
                 reason="access_error", description_placeholders={"reason": ex.reason}
             )
