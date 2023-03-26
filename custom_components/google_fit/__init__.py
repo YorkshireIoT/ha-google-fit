@@ -42,7 +42,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = dict(
         {
             "auth": auth,
-            "coordinator_manager": Coordinator(hass=hass, config=entry, auth=auth),
+            "coordinator": Coordinator(hass=hass, config=entry, auth=auth),
         }
     )
 

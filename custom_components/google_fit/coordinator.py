@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import timedelta, datetime
 import async_timeout
-
+from googleapiclient.http import BatchHttpRequest
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import (
@@ -21,7 +21,7 @@ class Coordinator(DataUpdateCoordinator):
 
     _auth: AsyncConfigEntryAuth
     _config: ConfigEntry
-    data: FitnessData = None  # type: ignore
+    fitness_data: FitnessData | None = None
 
     def __init__(
         self,
@@ -36,73 +36,67 @@ class Coordinator(DataUpdateCoordinator):
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=5),
+            update_interval=timedelta(minutes=1),
         )
 
-    def _get_request(self, service: FitService, source: str):
-        # Required type is in nanoseconds since Epoch in
-        # format "{start}-{end}"
+    @property
+    def current_data(self) -> FitnessData | None:
+        if self.fitness_data is None:
+            return None
+        else:
+            return self.fitness_data
+
+    def _get_interval(self):
         start = int(datetime.today().date().strftime("%s")) * 1000000000
         now = int(datetime.today().timestamp() * 1000000000)
-        dataset = f"${start}-{now}"
-        return (
-            service.users()
-            .dataSources()
-            .datasets()
-            .get(userId="me", dataSourceId=source, datasetId=dataset)
-        )
+        return f"{start}-{now}"
 
     async def _async_update_data(self) -> FitService | None:
         """Update data via library."""
 
         try:
             async with async_timeout.timeout(30):
-                if self.data is None:
-                    service = await self._auth.get_resource(self.hass)
+                service = await self._auth.get_resource(self.hass)
 
-                    recevied_data = FitnessData(
-                        lastUpdate=datetime.now(),
-                        activeMinutes=None,
-                        calories=None,
-                        distance=None,
-                        heartMinutes=None,
-                        height=None,
-                        weight=None,
-                        steps=None,
+                recevied_data = FitnessData(
+                    lastUpdate=datetime.now(),
+                    activeMinutes=None,
+                    calories=None,
+                    distance=None,
+                    heartMinutes=None,
+                    height=None,
+                    weight=None,
+                    steps=None,
+                )
+
+                def _get_data(source: str, dataset: str) -> FitnessObject:
+                    return (
+                        service.users()
+                        .dataSources()
+                        .datasets()
+                        .get(userId="me", dataSourceId=source, datasetId=dataset)
+                        .execute()
                     )
 
-                    def parse_response(
-                        request_id: str, response: FitnessObject, exception
-                    ):
-                        if exception is not None:
-                            raise UpdateFailed(
-                                f"Error communicating with API: {exception}"
-                            ) from exception
-                        else:
-                            if request_id == "steps":
-                                steps = 0
-                                for point in response.get("point"):
-                                    value = point.get("value")[0].get("intVal")
-                                    if value is not None:
-                                        steps += value
-                                recevied_data["steps"] = steps
-                            else:
-                                raise UpdateFailed(
-                                    f"Unknown batch request ID in callback: {request_id}"
-                                )
+                def parse_response(request_id: str, response: FitnessObject):
+                    if request_id == "steps":
+                        steps = 0
+                        for point in response.get("point"):
+                            value = point.get("value")[0].get("intVal")
+                            if value is not None:
+                                steps += value
+                        recevied_data["steps"] = steps
+                    else:
+                        raise UpdateFailed(
+                            f"Unknown batch request ID in callback: {request_id}"
+                        )
 
-                    # Build a Batch HTTP Request
-                    batch = service.new_batch_http_request(callback=parse_response)  # type: ignore
-                    batch.add(
-                        self._get_request(
-                            service,
-                            SOURCE_STEPS,
-                        ),
-                        "steps",
-                    )
-
-                    await batch.execute()
-                    self.data = recevied_data
+                dataset = self._get_interval()
+                response = await self.hass.async_add_executor_job(
+                    _get_data, SOURCE_STEPS, dataset
+                )
+                parse_response("steps", response)
+                self.fitness_data = recevied_data
 
         except Exception as err:
             raise UpdateFailed(f"Error communicating with API: {err}") from err

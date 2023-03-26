@@ -23,7 +23,8 @@ async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_devices: AddEntitiesCallback
 ) -> None:
     """Set up the sensor platform."""
-    coordinator = hass.data[DOMAIN][entry.entry_id]
+    entry_data = hass.data[DOMAIN][entry.entry_id]
+    coordinator: Coordinator = entry_data.get("coordinator")
     async_add_devices(
         GoogleFitBlueprintSensor(
             coordinator=coordinator,
@@ -46,18 +47,13 @@ class GoogleFitBlueprintSensor(GoogleFitEntity, SensorEntity):
         self.entity_description = entity_description
 
     @property
-    def native_value(self) -> str:
-        """Return the native value of the sensor."""
-        return self.coordinator.data.get(self.entity_description.name)
-
-    @property
     def available(self) -> bool:
         """Return if entity is available."""
         return self.coordinator.last_update_success
 
     def _read_value(self) -> None:
-        if self.coordinator.data is not None:
-            self._attr_native_value = self.coordinator.data.get(
+        if self.coordinator.current_data is not None:
+            self._attr_native_value = self.coordinator.current_data.get(
                 self.entity_description.name
             )
             self.async_write_ha_state()
