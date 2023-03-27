@@ -45,6 +45,7 @@ class OAuth2FlowHandler(
 
     async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> FlowResult:
         """Perform reauth upon an API authentication error."""
+        _ = entry_data
         self.reauth_entry = self.hass.config_entries.async_get_entry(
             self.context["entry_id"]
         )
@@ -70,8 +71,8 @@ class OAuth2FlowHandler(
         def _get_profile() -> dict[str, Any]:
             """Get profile from inside the executor."""
             lib = build("oauth2", "v2", credentials=credentials)
-            userinfo = lib.userinfo().get().execute()  # pylint: disable=no-member
-            return userinfo
+            user_info = lib.userinfo().get().execute()  # pylint: disable=no-member
+            return user_info
 
         def _check_fit_access() -> FitService:
             lib = build(

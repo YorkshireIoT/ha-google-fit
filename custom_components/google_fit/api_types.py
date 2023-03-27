@@ -1,6 +1,7 @@
-"""TypeDefinition for Google Fit API"""
+"""TypeDefinition for Google Fit API."""
 from datetime import datetime
-from typing import TypedDict, Optional, Callable, Any
+from typing import TypedDict, Optional, Any
+from collections.abc import Callable
 
 from googleapiclient.discovery import Resource
 from googleapiclient.http import BatchHttpRequest
@@ -14,7 +15,7 @@ class FitService(Resource):
 
 
 class FitnessData(TypedDict):
-    """All the fitenss data retrieved from the API"""
+    """All the fitness data retrieved from the API."""
 
     lastUpdate: datetime
     activeMinutes: Optional[int]
@@ -28,7 +29,9 @@ class FitnessData(TypedDict):
 
 class FitnessValue(TypedDict):
     """Representation of a the value of a single data point returned from the Google Fit API.
-    See: https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.datasets.html#get
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.datasets
     """
 
     fpVal: Optional[float]
@@ -38,7 +41,9 @@ class FitnessValue(TypedDict):
 
 class FitnessPoint(TypedDict):
     """Representation of a single data point returned from the Google Fit API.
-    See: https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.datasets.html#get
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.datasets
     """
 
     dataTypeName: str
@@ -51,7 +56,9 @@ class FitnessPoint(TypedDict):
 
 class FitnessObject(TypedDict):
     """Representation of the data returned from the Google Fit API.
-    See: https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.datasets.html#get
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.datasets
     """
 
     dataSourceId: str

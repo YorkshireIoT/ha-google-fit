@@ -42,7 +42,7 @@ class GoogleFitBlueprintSensor(GoogleFitEntity, SensorEntity):
         coordinator: Coordinator,
         entity_description: SensorEntityDescription,
     ) -> None:
-        """Initialize the sensor class."""
+        """Initialise the sensor class."""
         super().__init__(coordinator)
         self.entity_description = entity_description
 

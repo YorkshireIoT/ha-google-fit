@@ -21,7 +21,7 @@ class AsyncConfigEntryAuth(OAuthClientAuthHandler):
         websession: ClientSession,
         oauth2Session: config_entry_oauth2_flow.OAuth2Session,
     ) -> None:
-        """Initialize Google Fit Auth."""
+        """Initialise Google Fit Auth."""
         self.oauth_session = oauth2Session
         self.discovery_cache = SimpleDiscoveryCache()
         super().__init__(websession)
@@ -60,12 +60,17 @@ class AsyncConfigEntryAuth(OAuthClientAuthHandler):
 class SimpleDiscoveryCache(Cache):
     """A very simple discovery cache."""
 
-    def __init__(self):
-        self._data = dict([])
+    def __init__(self) -> None:
+        """Cache Initialisation."""
+        self._data = {}
 
     def get(self, url):
+        """Cache Getter (if available)."""
         if url in self._data:
             return self._data[url]
+        else:
+            return None
 
-    def set(self, url, content):
+    def set(self, url, content) -> None:
+        """Cache Setter."""
         self._data[url] = content

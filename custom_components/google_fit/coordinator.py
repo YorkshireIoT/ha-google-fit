@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from datetime import timedelta, datetime
 import async_timeout
-from googleapiclient.http import BatchHttpRequest
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import (
@@ -29,7 +28,7 @@ class Coordinator(DataUpdateCoordinator):
         auth: AsyncConfigEntryAuth,
         config: ConfigEntry,
     ) -> None:
-        """Initialize."""
+        """Initialise."""
         self._auth = auth
         self._config = config
         super().__init__(
@@ -41,6 +40,7 @@ class Coordinator(DataUpdateCoordinator):
 
     @property
     def current_data(self) -> FitnessData | None:
+        """Return the current data, or None is data is not available."""
         if self.fitness_data is None:
             return None
         else:
@@ -58,7 +58,7 @@ class Coordinator(DataUpdateCoordinator):
             async with async_timeout.timeout(30):
                 service = await self._auth.get_resource(self.hass)
 
-                recevied_data = FitnessData(
+                received_data = FitnessData(
                     lastUpdate=datetime.now(),
                     activeMinutes=None,
                     calories=None,
@@ -78,14 +78,15 @@ class Coordinator(DataUpdateCoordinator):
                         .execute()
                     )
 
-                def parse_response(request_id: str, response: FitnessObject):
+                def parse_response(request_id: str, response: FitnessObject) -> None:
                     if request_id == "steps":
                         steps = 0
                         for point in response.get("point"):
                             value = point.get("value")[0].get("intVal")
                             if value is not None:
                                 steps += value
-                        recevied_data["steps"] = steps
+                        received_data["steps"] = steps
+                        LOGGER.debug("Step retrieval successful. Got %d steps.", steps)
                     else:
                         raise UpdateFailed(
                             f"Unknown batch request ID in callback: {request_id}"
@@ -96,7 +97,7 @@ class Coordinator(DataUpdateCoordinator):
                     _get_data, SOURCE_STEPS, dataset
                 )
                 parse_response("steps", response)
-                self.fitness_data = recevied_data
+                self.fitness_data = received_data
 
         except Exception as err:
             raise UpdateFailed(f"Error communicating with API: {err}") from err

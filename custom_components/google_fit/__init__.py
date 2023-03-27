@@ -4,10 +4,9 @@ from __future__ import annotations
 import logging
 from aiohttp.client_exceptions import ClientError, ClientResponseError
 
-from homeassistant.config_entries import ConfigEntry, ConfigEntryState
-from homeassistant.const import CONF_NAME, Platform
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.device_registry import DeviceEntry
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.config_entry_oauth2_flow import (
@@ -34,7 +33,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     except ClientResponseError as err:
         if 400 <= err.status < 500:
             raise ConfigEntryAuthFailed(
-                "OAuth session is not valid, reauth required"
+                "OAuth session is not valid, re-authentication required"
             ) from err
         raise ConfigEntryNotReady from err
     except ClientError as err:
