@@ -1,5 +1,5 @@
 colorlog==6.7.0
 homeassistant
 pip>=21.0,<23.1
-ruff==0.0.257
+ruff==0.0.259
 google-api-python-client==2.82.0
