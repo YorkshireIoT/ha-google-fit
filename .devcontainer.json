@@ -1,5 +1,5 @@
 {
-    "name": "ludeeus/integration_blueprint",
+    "name": "YorkshireIoT/ha-google-fit",
     "image": "mcr.microsoft.com/vscode/devcontainers/python:0-3.10-bullseye",
     "postCreateCommand": "scripts/setup",
     "forwardPorts": [
@@ -8,13 +8,13 @@
     "customizations": {
         "vscode": {
             "extensions": [
-				"ms-python.python",
-				"github.vscode-pull-request-github",
-				"ryanluker.vscode-coverage-gutters",
-				"ms-python.vscode-pylance",
-				"streetsidesoftware.code-spell-checker",
-				"ms-python.pylint"
-			],
+                "ms-python.python",
+                "github.vscode-pull-request-github",
+                "ryanluker.vscode-coverage-gutters",
+                "ms-python.vscode-pylance",
+                "streetsidesoftware.code-spell-checker",
+                "ms-python.pylint"
+            ],
             "settings": {
                 "files.eol": "\n",
                 "editor.tabSize": 4,
