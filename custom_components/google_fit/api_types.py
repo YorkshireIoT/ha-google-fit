@@ -2,7 +2,8 @@
 from datetime import datetime
 from typing import TypedDict, Optional, Any
 from collections.abc import Callable
-
+from dataclasses import dataclass
+from homeassistant.components.sensor import SensorEntityDescription
 from googleapiclient.discovery import Resource
 from googleapiclient.http import BatchHttpRequest
 
@@ -18,7 +19,7 @@ class FitnessData(TypedDict):
     """All the fitness data retrieved from the API."""
 
     lastUpdate: datetime
-    activeMinutes: Optional[int]
+    activeMinutes: Optional[float]
     calories: Optional[float]
     distance: Optional[float]
     heartMinutes: Optional[float]
@@ -66,3 +67,24 @@ class FitnessObject(TypedDict):
     minStartTimeNs: str
     nextPageToken: str
     point: list[FitnessPoint]
+
+
+class FitnessDataPoint(TypedDict):
+    """Representation of a data point change returned from the Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.dataPointChanges
+    """
+
+    dataSourceId: str
+    deletedDataPoint: list[FitnessPoint]
+    insertedDataPoint: list[FitnessPoint]
+    nextPageToken: str
+
+
+@dataclass
+class GoogleFitSensorDescription(SensorEntityDescription):
+    """Extends Sensor Description types to add necessary component values."""
+
+    data_key: str | None = None
+    source: str | None = None
