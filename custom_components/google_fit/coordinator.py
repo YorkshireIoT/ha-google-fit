@@ -41,10 +41,7 @@ class Coordinator(DataUpdateCoordinator):
     @property
     def current_data(self) -> FitnessData | None:
         """Return the current data, or None is data is not available."""
-        if self.fitness_data is None:
-            return None
-        else:
-            return self.fitness_data
+        return self.fitness_data
 
     def _get_interval(self):
         start = int(datetime.today().date().strftime("%s")) * 1000000000
@@ -101,58 +98,30 @@ class Coordinator(DataUpdateCoordinator):
                         value = point.get("value")[0].get("fpVal")
                         if value is not None:
                             counter += value
-                    return counter
+                    return round(counter, 2)
+
+                def _get_first_data_point(response: FitnessDataPoint) -> float | None:
+                    value = None
+                    data_points = response.get("insertedDataPoint")
+                    if len(data_points) > 0:
+                        values = data_points[0].get("value")
+                        if len(values) > 0:
+                            value = round(values[0].get("fpVal"), 2)
+
+                    return value
 
                 def parse_response(
                     request_id: str, response: FitnessObject | FitnessDataPoint
                 ) -> None:
-                    if request_id == "activeMinutes":
-                        # Data return is in milliseconds
-                        active_minutes = _sum_points_int(response) / 1000
-                        received_data["activeMinutes"] = active_minutes
-                        LOGGER.debug(
-                            "Active Minutes retrieval successful. Got %f minutes.",
-                            active_minutes,
-                        )
-                    elif request_id == "calories":
-                        calories = _sum_points_float(response)
-                        received_data["calories"] = calories
-                        LOGGER.debug(
-                            "Calories burnt retrieval successful. Got %f kcal.",
-                            calories,
-                        )
-                    elif request_id == "distance":
-                        distance = _sum_points_float(response)
-                        received_data["distance"] = distance
-                        LOGGER.debug(
-                            "Distance travelled retrieval successful. Got %f km.",
-                            distance,
-                        )
-                    elif request_id == "heartMinutes":
-                        heart_minutes = _sum_points_float(response)
-                        received_data["heartMinutes"] = heart_minutes
-                        LOGGER.debug(
-                            "Heart Points retrieval successful. Got %f.",
-                            heart_minutes,
-                        )
-                    elif request_id == "height":
-                        # FIXME: Check if list entries exist before access
-                        received_data["height"] = (
-                            response.get("insertedDataPoint")[0]
-                            .get("value")[0]
-                            .get("fpVal")
-                        )
-                    elif request_id == "weight":
-                        # FIXME: Check if list entries exist before access
-                        received_data["weight"] = (
-                            response.get("insertedDataPoint")[0]
-                            .get("value")[0]
-                            .get("fpVal")
-                        )
-                    elif request_id == "steps":
-                        steps = _sum_points_int(response)
-                        received_data["steps"] = steps
-                        LOGGER.debug("Step retrieval successful. Got %d steps.", steps)
+                    # Sensor types where data is returned as integer and needs summing
+                    if request_id in ["activeMinutes", "steps"]:
+                        received_data[request_id] = _sum_points_int(response)
+                    # Sensor types where data is returned as float and needs summing
+                    elif request_id in ["calories", "distance", "heartMinutes"]:
+                        received_data[request_id] = _sum_points_float(response)
+                    # Sensor types where data is returned as single float point (no summing)
+                    elif request_id in ["height", "weight"]:
+                        received_data[request_id] = _get_first_data_point(response)
                     else:
                         raise UpdateFailed(
                             f"Unknown request ID specified for parsing: {request_id}"
