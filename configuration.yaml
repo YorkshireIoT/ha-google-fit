@@ -6,3 +6,9 @@ logger:
   default: info
   logs:
     custom_components.google_fit: debug
+
+# Uncomment the following 3 lines to enable debugging for Home Assistant.
+# See launch.json for an example launch
+# debugpy:
+#   start: true
+#   wait: true

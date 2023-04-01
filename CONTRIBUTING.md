@@ -56,6 +56,16 @@ Home Assistant instance running and already configured with the included
 [`configuration.yaml`](./configuration.yaml)
 file.
 
+### Debugging
+
+Debugging is done using the [Remote Python Debugger](https://www.home-assistant.io/integrations/debugpy/).
+
+Enable it by commenting on the relevant lines in
+[`configuration.yaml`](./configuration.yaml).
+
+With this configuration Home Assistant will pause on start up, waiting for the debugger to attach.
+You can do this by pressing F5 or going to the 'Run and Debug' tab on the left.
+
 ## License
 
 By contributing, you agree that your contributions will be licensed under its MIT License.
