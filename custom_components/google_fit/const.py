@@ -52,7 +52,7 @@ ENTITY_DESCRIPTIONS = (
         native_unit_of_measurement="kcal",
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=None,
-        source="derived:com.google.calories.expended:com.google.android.gms:merge_calories_expended",
+        source="derived:com.google.calories.expended:com.google.android.gms:merge_calories_expended",  # pylint: disable=line-too-long
         data_key="calories",
     ),
     GoogleFitSensorDescription(
