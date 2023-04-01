@@ -1,0 +1,14 @@
+{
+    "cSpell.words": [
+        "aiohttp",
+        "clientsession",
+        "creds",
+        "googleapiclient",
+        "hacs",
+        "hass",
+        "Millis",
+        "Nanos",
+        "reauth",
+        "websession"
+    ]
+}

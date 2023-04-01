@@ -68,8 +68,7 @@ class SimpleDiscoveryCache(Cache):
         """Cache Getter (if available)."""
         if url in self._data:
             return self._data[url]
-        else:
-            return None
+        return None
 
     def set(self, url, content) -> None:
         """Cache Setter."""
