@@ -38,6 +38,11 @@ class GoogleFitBlueprintSensor(GoogleFitEntity, SensorEntity):
         """Initialise the sensor class."""
         super().__init__(coordinator)
         self.entity_description = entity_description
+        # Follow method in core Google Mail component and use oauth session to create unique ID
+        self._attr_unique_id = (
+            f"{coordinator.oauth_session.config_entry.entry_id}_"
+            + f"{entity_description.key}_{entity_description.data_key}"
+        )
 
     @property
     def available(self) -> bool:

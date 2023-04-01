@@ -9,6 +9,7 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
     UpdateFailed,
 )
+from homeassistant.helpers.config_entry_oauth2_flow import OAuth2Session
 from .api import AsyncConfigEntryAuth
 from .api_types import FitService, FitnessData, FitnessObject, FitnessDataPoint
 from .const import DOMAIN, LOGGER, ENTITY_DESCRIPTIONS
@@ -37,6 +38,13 @@ class Coordinator(DataUpdateCoordinator):
             name=DOMAIN,
             update_interval=timedelta(minutes=1),
         )
+
+    @property
+    def oauth_session(self) -> OAuth2Session | None:
+        """Returns the OAuth Session associated with the coordinator, or None if not available."""
+        if self._auth is None:
+            return None
+        return self._auth.oauth_session
 
     @property
     def current_data(self) -> FitnessData | None:
