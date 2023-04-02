@@ -18,7 +18,6 @@ DOMAIN: Final = "google_fit"
 MANUFACTURER: Final = "Google, Inc."
 
 # Required Scopes
-DATA_AUTH: Final = "auth"
 DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/fitness.activity.read",
@@ -27,12 +26,6 @@ DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/fitness.location.read",
 ]
 
-ATTRIBUTION: Final = "json"
-ISSUE_URL: Final = "https://github.com/YorkshireIoT/ha-google-fit/issues"
-CONF_UPDATE_INTERVAL: Final = "update_interval"
-
-DATA_CLIENT: Final = "client"
-DATA_COORDINATOR: Final = "coordinator"
 
 ENTITY_DESCRIPTIONS = (
     GoogleFitSensorDescription(
