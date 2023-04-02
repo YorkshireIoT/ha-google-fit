@@ -83,7 +83,7 @@ class Coordinator(DataUpdateCoordinator):
                         .execute()
                     )
 
-                def _get_data_changes(source: str) -> FitnessObject:
+                def _get_data_changes(source: str) -> FitnessDataPoint:
                     return (
                         service.users()
                         .dataSources()
@@ -114,7 +114,9 @@ class Coordinator(DataUpdateCoordinator):
                     if len(data_points) > 0:
                         values = data_points[0].get("value")
                         if len(values) > 0:
-                            value = round(values[0].get("fpVal"), 2)
+                            data_point = values[0].get("fpVal")
+                            if data_point is not None:
+                                value = round(data_point, 2)
 
                     return value
 
@@ -123,13 +125,28 @@ class Coordinator(DataUpdateCoordinator):
                 ) -> None:
                     # Sensor types where data is returned as integer and needs summing
                     if request_id in ["activeMinutes", "steps"]:
-                        received_data[request_id] = _sum_points_int(response)
+                        if isinstance(response, FitnessObject):
+                            received_data[request_id] = _sum_points_int(response)
+                        else:
+                            raise UpdateFailed(
+                                f"Internal Error parsing {request_id} data. Expected FitnessObject, got {type(response)}."
+                            )
                     # Sensor types where data is returned as float and needs summing
                     elif request_id in ["calories", "distance", "heartMinutes"]:
-                        received_data[request_id] = _sum_points_float(response)
+                        if isinstance(response, FitnessObject):
+                            received_data[request_id] = _sum_points_float(response)
+                        else:
+                            raise UpdateFailed(
+                                f"Internal Error parsing {request_id} data. Expected FitnessObject, got {type(response)}."
+                            )
                     # Sensor types where data is returned as single float point (no summing)
                     elif request_id in ["height", "weight"]:
-                        received_data[request_id] = _get_first_data_point(response)
+                        if isinstance(response, FitnessDataPoint):
+                            received_data[request_id] = _get_first_data_point(response)
+                        else:
+                            raise UpdateFailed(
+                                f"Internal Error parsing {request_id} data. Expected FitnessDataPoint, got {type(response)}."
+                            )
                     else:
                         raise UpdateFailed(
                             f"Unknown request ID specified for parsing: {request_id}"

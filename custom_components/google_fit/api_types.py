@@ -86,5 +86,5 @@ class FitnessDataPoint(TypedDict):
 class GoogleFitSensorDescription(SensorEntityDescription):
     """Extends Sensor Description types to add necessary component values."""
 
-    data_key: str | None = None
-    source: str | None = None
+    data_key: str = "undefined"
+    source: str = "undefined"
