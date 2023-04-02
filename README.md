@@ -17,13 +17,13 @@ data within Home Assistant.
 
 Platform | Name |Description
 -- | -- | --
-`sensor` | `active_minutes_daily` | Active Minutes. Reset daily.
-`sensor` | `calories_burnt_daily` | Calories burnt (kcal). Reset daily.
-`sensor` | `distance_travelled_daily` | Distance (metres) travelled. Reset daily.
-`sensor` | `heart_points_daily` | Heart Points earned. Reset daily.
-`sensor` | `height` | Height (metres).
-`sensor` | `weight` | Weight (kilograms).
-`sensor` | `steps` | Number of steps taken. Reset daily.
+`sensor` | `active_minutes_daily` | [Active Minutes][active-minutes]. Reset daily.
+`sensor` | `calories_burnt_daily` | [Calories burnt][calories-burnt] (kcal). Reset daily.
+`sensor` | `distance_travelled_daily` | [Distance travelled][distance-travelled] (metres). Reset daily.
+`sensor` | `heart_points_daily` | [Heart Points][heart-points] earned. Reset daily.
+`sensor` | `height` | [Height][height] (metres).
+`sensor` | `weight` | [Weight][weight] (kilograms).
+`sensor` | `steps` | [Number of steps][steps] taken. Reset daily.
 
 ## Prerequisites
 
@@ -112,3 +112,12 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 [releases]: https://github.com/YorkshireIoT/ha-google-fit/releases
 [rest-api]: https://developers.google.com/fit/rest
 [google-mail]: https://next.home-assistant.io/integrations/google_mail/
+
+<!--Links to Google Docs for detailed information on sensors -->
+[active-minutes]: https://developers.google.com/fit/datatypes/activity#move_minutes
+[calories-burnt]: https://developers.google.com/fit/datatypes/activity#calories_burned
+[distance-travelled]: https://developers.google.com/fit/datatypes/location#distance_delta
+[heart-points]: https://developers.google.com/fit/datatypes/activity#heart_points
+[steps]: https://developers.google.com/fit/datatypes/activity#step_count_delta
+[height]: https://developers.google.com/fit/datatypes/health#height
+[weight]: https://developers.google.com/fit/datatypes/health#weight
