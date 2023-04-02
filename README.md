@@ -11,6 +11,8 @@
 This integration interfaces with the [Google Fit REST API][rest-api] to provide Google Fit
 data within Home Assistant.
 
+![Example](/res/example.png)
+
 **This integration will set up the following platforms.**
 
 Platform | Name |Description
@@ -68,7 +70,24 @@ Instead, follow the instruction in the Official home Assistant Docs for [Google 
 
 ## Configuration is done in the UI
 
-<!---->
+Just go to Integrations->Add Integration and follow the steps.
+If you have set the app you created in the Credentials configuration to publish
+(which you should've done to avoid re-authentication problems) then you
+will probably see a warning step asking if you want to proceed.
+
+You can hit "Advanced", then "Proceed" as *you* are the 'developer' of the app,
+as you created the app and credentials in your own account.
+
+### Configuration Example Screenshots
+
+![Add Integration](/res/add.png)
+![Add Credentials](/res/add_credentials.png)
+![Choose Google Account](/res/choose_account.png)
+![Unverified Warning](/res/warning.png)
+![Access Request with Scopes](/res/wants_access.png)
+![Link Account](/res/link_account.png)
+![Finished](/res/success.png)
+
 
 ## Contributions are welcome!
 
