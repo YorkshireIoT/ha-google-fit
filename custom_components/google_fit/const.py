@@ -24,7 +24,19 @@ DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/fitness.body.read",
     "https://www.googleapis.com/auth/fitness.nutrition.read",
     "https://www.googleapis.com/auth/fitness.location.read",
+    "https://www.googleapis.com/auth/fitness.sleep.read",
 ]
+
+# Sleep Data Enum. Taken from:
+# https://developers.google.com/fit/scenarios/read-sleep-data
+SLEEP_STAGE: Final = {
+    1: "awakeSeconds",
+    2: "sleepSeconds",
+    # 3: "Out-of-bed", # Not supported
+    4: "lightSleepSeconds",
+    5: "deepSleepSeconds",
+    6: "remSleepSeconds",
+}
 
 
 ENTITY_DESCRIPTIONS = (
@@ -97,5 +109,55 @@ ENTITY_DESCRIPTIONS = (
         device_class=None,
         source="derived:com.google.step_count.delta:com.google.android.gms:estimated_steps",
         data_key="steps",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Awake Time Past 24h",
+        icon="mdi:sun-clock",
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.DURATION,
+        source="derived:com.google.sleep.segment:com.google.android.gms:merged",
+        data_key="awakeSeconds",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Total Sleep Time Past 24h",
+        icon="mdi:bed-clock",
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.DURATION,
+        source="derived:com.google.sleep.segment:com.google.android.gms:merged",
+        data_key="sleepSeconds",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Light Sleep Time Past 24h",
+        icon="mdi:power-sleep",
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.DURATION,
+        source="derived:com.google.sleep.segment:com.google.android.gms:merged",
+        data_key="lightSleepSeconds",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Deep Sleep Time Past 24h",
+        icon="mdi:sleep",
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.DURATION,
+        source="derived:com.google.sleep.segment:com.google.android.gms:merged",
+        data_key="deepSleepSeconds",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="REM Sleep Time Past 24h",
+        icon="mdi:chat-sleep",
+        native_unit_of_measurement=UnitOfTime.SECONDS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.DURATION,
+        source="derived:com.google.sleep.segment:com.google.android.gms:merged",
+        data_key="remSleepSeconds",
     ),
 )
