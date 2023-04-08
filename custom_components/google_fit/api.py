@@ -11,9 +11,16 @@ from homeassistant.core import HomeAssistant
 from homeassistant.const import CONF_ACCESS_TOKEN
 from homeassistant.helpers import config_entry_oauth2_flow
 from homeassistant.helpers.update_coordinator import UpdateFailed
+from homeassistant.exceptions import ConfigEntryAuthFailed
 
-from .api_types import FitService, FitnessData, FitnessObject, FitnessDataPoint
-from .const import SLEEP_STAGE
+from .api_types import (
+    FitService,
+    FitnessData,
+    FitnessObject,
+    FitnessDataPoint,
+    FitnessDataSource,
+)
+from .const import SLEEP_STAGE, ENTITY_DESCRIPTIONS
 
 
 class AsyncConfigEntryAuth(OAuthClientAuthHandler):
@@ -33,6 +40,28 @@ class AsyncConfigEntryAuth(OAuthClientAuthHandler):
     def access_token(self) -> str:
         """Return the access token."""
         return self.oauth_session.token[CONF_ACCESS_TOKEN]
+
+    async def check_scopes(self, hass: HomeAssistant) -> None:
+        """Check the current scope access."""
+        service = await self.get_resource(hass)
+
+        def get_sources() -> FitnessDataSource:
+            return service.users().dataSources().list(userId="me").execute()
+
+        data_sources = await hass.async_add_executor_job(get_sources)
+
+        available_sources = []
+        for data_stream in data_sources.get("dataSource"):
+            available_sources.append(data_stream.get("dataStreamId"))
+
+        # Cycle through each of the required sources and check the current
+        # auth gives access to them
+        for entity in ENTITY_DESCRIPTIONS:
+            if entity.source not in available_sources:
+                raise ConfigEntryAuthFailed(
+                    "Current authentication does not provide access to all required sensors."
+                    + " Re-authentication required."
+                )
 
     async def check_and_refresh_token(self) -> str:
         """Check the token."""
@@ -84,7 +113,7 @@ class GoogleFitParse:
     data: FitnessData
 
     def __init__(self):
-        """Initalise the data to base value and add a timestamp."""
+        """Initialise the data to base value and add a timestamp."""
         self.data = FitnessData(
             lastUpdate=datetime.now(),
             activeMinutes=None,

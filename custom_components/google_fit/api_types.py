@@ -87,6 +87,20 @@ class FitnessDataPoint(TypedDict):
     nextPageToken: str
 
 
+class FitnessDataStream(TypedDict):
+    """Minimal representation of a data source returned from the Google Fit API."""
+
+    dataStreamName: str
+    dataStreamId: str
+    type: str
+
+
+class FitnessDataSource(TypedDict):
+    """Minimal representation of a data source returned from the Google Fit API."""
+
+    dataSource: list[FitnessDataStream]
+
+
 @dataclass
 class GoogleFitSensorDescription(SensorEntityDescription):
     """Extends Sensor Description types to add necessary component values."""

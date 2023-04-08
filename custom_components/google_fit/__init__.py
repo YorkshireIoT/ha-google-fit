@@ -38,6 +38,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         raise ConfigEntryNotReady from err
     except ClientError as err:
         raise ConfigEntryNotReady from err
+
+    # Check current authentication has access to all sensors. When integration adds
+    # new scopes, re-authentication will be required.
+    await auth.check_scopes(hass=hass)
+
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = dict(
         {
             "auth": auth,
