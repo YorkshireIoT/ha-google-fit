@@ -124,11 +124,11 @@ class GoogleFitParse:
             height=None,
             weight=None,
             steps=None,
-            awakeSeconds=0,
-            sleepSeconds=0,
-            lightSleepSeconds=0,
-            deepSleepSeconds=0,
-            remSleepSeconds=0,
+            awakeSeconds=None,
+            sleepSeconds=None,
+            lightSleepSeconds=None,
+            deepSleepSeconds=None,
+            remSleepSeconds=None,
         )
 
     def _sum_points_int(self, response: FitnessObject) -> int:
@@ -185,6 +185,10 @@ class GoogleFitParse:
                 ):
                     sleep_stage = SLEEP_STAGE.get(sleep_type)
                     if sleep_stage is not None:
+                        # If field is still at None, initialise it to zero
+                        if self.data[sleep_stage] is None:
+                            self.data[sleep_stage] = 0
+
                         self.data[sleep_stage] += (
                             int(end_time) - int(start_time)
                         ) / 1000000000

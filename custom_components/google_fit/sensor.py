@@ -51,10 +51,10 @@ class GoogleFitBlueprintSensor(GoogleFitEntity, SensorEntity):
 
     def _read_value(self) -> None:
         if self.coordinator.current_data is not None:
-            self._attr_native_value = self.coordinator.current_data.get(
-                self.entity_description.data_key
-            )
-            self.async_write_ha_state()
+            value = self.coordinator.current_data.get(self.entity_description.data_key)
+            if value is not None:
+                self._attr_native_value = value
+                self.async_write_ha_state()
 
     @callback
     def _handle_coordinator_update(self) -> None:

@@ -26,11 +26,11 @@ class FitnessData(TypedDict):
     height: Optional[float]
     weight: Optional[float]
     steps: Optional[int]
-    awakeSeconds: float
-    sleepSeconds: float
-    lightSleepSeconds: float
-    deepSleepSeconds: float
-    remSleepSeconds: float
+    awakeSeconds: Optional[float]
+    sleepSeconds: Optional[float]
+    lightSleepSeconds: Optional[float]
+    deepSleepSeconds: Optional[float]
+    remSleepSeconds: Optional[float]
 
 
 class FitnessValue(TypedDict):
