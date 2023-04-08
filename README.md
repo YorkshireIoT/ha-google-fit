@@ -23,7 +23,11 @@ Platform | Name |Description
 `sensor` | `heart_points_daily` | [Heart Points][heart-points] earned. Reset daily.
 `sensor` | `height` | [Height][height] (metres).
 `sensor` | `weight` | [Weight][weight] (kilograms).
-`sensor` | `steps` | [Number of steps][steps] taken. Reset daily.
+`sensor` | `deep_sleep_time_past_24h` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
+`sensor` | `light_sleep_time_past_24h` | [Light sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
+`sensor` | `rem_sleep_time_past_24h` | [REM sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
+`sensor` | `awake_time_past_24h` | [Awake][sleep] time during a sleep session over the past 24 hours. Not overall daily awake time. May not be available depending on sleep data provider.
+`sensor` | `total_sleep_time_past_24h` | [Overall sleep][sleep] time over the past 24 hours.
 
 ## Prerequisites
 
@@ -121,3 +125,4 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 [steps]: https://developers.google.com/fit/datatypes/activity#step_count_delta
 [height]: https://developers.google.com/fit/datatypes/health#height
 [weight]: https://developers.google.com/fit/datatypes/health#weight
+[sleep]: https://developers.google.com/fit/datatypes/health#sleep
