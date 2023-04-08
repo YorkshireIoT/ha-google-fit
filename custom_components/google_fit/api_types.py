@@ -88,7 +88,11 @@ class FitnessDataPoint(TypedDict):
 
 
 class FitnessDataStream(TypedDict):
-    """Minimal representation of a data source returned from the Google Fit API."""
+    """Minimal representation of a data source returned from the Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.html#list
+    """
 
     dataStreamName: str
     dataStreamId: str
@@ -96,9 +100,43 @@ class FitnessDataStream(TypedDict):
 
 
 class FitnessDataSource(TypedDict):
-    """Minimal representation of a data source returned from the Google Fit API."""
+    """Minimal representation of a data source returned from the Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.html#list
+    """
 
     dataSource: list[FitnessDataStream]
+
+
+class FitnessSession(TypedDict):
+    """Representation of a single session returned in response from Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.sessions.html#list
+    """
+
+    activeTimeMillis: str
+    activityType: int
+    description: str
+    endTimeMillis: str
+    id: str
+    modifiedTimeMillis: str
+    name: str
+    startTimeMillis: str
+
+
+class FitnessSessionResponse(TypedDict):
+    """Representation of a session response returned from the Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.sessions.html#list
+    """
+
+    deletedSession: None
+    hasMoreData: None
+    nextPageToken: Optional[str]
+    session: list[FitnessSession]
 
 
 @dataclass

@@ -11,7 +11,13 @@ from homeassistant.helpers.update_coordinator import (
 )
 from homeassistant.helpers.config_entry_oauth2_flow import OAuth2Session
 from .api import AsyncConfigEntryAuth, GoogleFitParse
-from .api_types import FitService, FitnessData, FitnessObject, FitnessDataPoint
+from .api_types import (
+    FitService,
+    FitnessData,
+    FitnessObject,
+    FitnessDataPoint,
+    FitnessSessionResponse,
+)
 from .const import DOMAIN, LOGGER, ENTITY_DESCRIPTIONS
 
 
@@ -94,6 +100,24 @@ class Coordinator(DataUpdateCoordinator):
                         .execute()
                     )
 
+                def _get_session(activity_id: int) -> FitnessSessionResponse:
+                    """Return a list of sessions for the activity whose end time was in last 24h."""
+                    end_time = datetime.utcnow().isoformat() + "Z"
+                    start_time = (
+                        datetime.utcnow() - timedelta(days=1)
+                    ).isoformat() + "Z"
+                    return (
+                        service.users()
+                        .sessions()
+                        .list(
+                            userId="me",
+                            activityType=activity_id,
+                            startTime=start_time,
+                            endTime=end_time,
+                        )
+                        .execute()
+                    )
+
                 fetched_sleep = False
                 for entity in ENTITY_DESCRIPTIONS:
                     if entity.data_key in [
@@ -110,7 +134,6 @@ class Coordinator(DataUpdateCoordinator):
                         parser.parse(entity.data_key, fit_object=response)
                     elif entity.data_key in [
                         "awakeSeconds",
-                        "sleepSeconds",
                         "lightSleepSeconds",
                         "deepSleepSeconds",
                         "remSleepSeconds",
@@ -123,6 +146,11 @@ class Coordinator(DataUpdateCoordinator):
                             )
                             fetched_sleep = True
                             parser.parse(entity.data_key, fit_object=response)
+                    elif entity.data_key == "sleepSeconds":
+                        response = await self.hass.async_add_executor_job(
+                            _get_session, 72
+                        )
+                        parser.parse(entity.data_key, fit_session=response)
                     # Height and weight
                     else:
                         response = await self.hass.async_add_executor_job(

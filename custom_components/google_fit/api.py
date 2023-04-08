@@ -19,6 +19,7 @@ from .api_types import (
     FitnessObject,
     FitnessDataPoint,
     FitnessDataSource,
+    FitnessSessionResponse,
 )
 from .const import SLEEP_STAGE, ENTITY_DESCRIPTIONS
 
@@ -168,7 +169,6 @@ class GoogleFitParse:
             self.data[request_id] = self._sum_points_float(response)
         elif request_id in [
             "awakeSeconds",
-            "sleepSeconds",
             "lightSleepSeconds",
             "deepSleepSeconds",
             "remSleepSeconds",
@@ -188,12 +188,21 @@ class GoogleFitParse:
                         self.data[sleep_stage] += (
                             int(end_time) - int(start_time)
                         ) / 1000000000
-
-            self.data["sleepSeconds"] += (
-                self.data["lightSleepSeconds"]
-                + self.data["deepSleepSeconds"]
-                + self.data["remSleepSeconds"]
+        else:
+            raise UpdateFailed(
+                f"Unknown request ID specified for parsing: {request_id}"
             )
+
+    def _parse_session(self, request_id: str, response: FitnessSessionResponse):
+        """Parse the given session data from the API according to the passed request_id."""
+        if request_id == "sleepSeconds":
+            # Sum all the session times (in milliseconds) from within the response
+            summed_millis = 0
+            for session in response.get("session"):
+                summed_millis += int(session.get("endTimeMillis")) - int(
+                    session.get("startTimeMillis")
+                )
+            self.data["sleepSeconds"] = summed_millis / 1000
         else:
             raise UpdateFailed(
                 f"Unknown request ID specified for parsing: {request_id}"
@@ -214,16 +223,21 @@ class GoogleFitParse:
         request_id: str,
         fit_object: FitnessObject | None = None,
         fit_point: FitnessDataPoint | None = None,
+        fit_session: FitnessSessionResponse | None = None,
     ) -> None:
-        """Parse either (but not both) the given fit object or point according to request_id."""
-        if fit_object is not None and fit_point is None:
+        """Parse the given fit object or point according to request_id.
+
+        Only one fit_ type object should be specified.
+        """
+        if fit_object is not None:
             self._parse_object(request_id, fit_object)
-        elif fit_object is None and fit_point is not None:
+        elif fit_point is not None:
             self._parse_point(request_id, fit_point)
+        elif fit_session is not None:
+            self._parse_session(request_id, fit_session)
         else:
             raise UpdateFailed(
-                "Invalid parse call."
-                + "Either object must be None or point must be None. Not both or neither."
+                "Invalid parse call." + "A fit type object must be passed to be parsed."
             )
 
     @property
