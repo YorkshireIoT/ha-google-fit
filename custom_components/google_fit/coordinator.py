@@ -58,7 +58,7 @@ class Coordinator(DataUpdateCoordinator):
         return self.fitness_data
 
     def _get_interval(self, midnight_reset: bool = True) -> str:
-        """Returns the necessary interval for API queries, with start and end time in nanoseconds.
+        """Return the necessary interval for API queries, with start and end time in nanoseconds.
 
         If midnight_reset is true, start time is considered to be midnight of that day.
         If false, start time is considered to be exactly 24 hours ago.
