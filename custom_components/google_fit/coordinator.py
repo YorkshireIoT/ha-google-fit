@@ -57,7 +57,12 @@ class Coordinator(DataUpdateCoordinator):
         """Return the current data, or None is data is not available."""
         return self.fitness_data
 
-    def _get_interval(self, midnight_reset: bool = True):
+    def _get_interval(self, midnight_reset: bool = True) -> str:
+        """Returns the necessary interval for API queries, with start and end time in nanoseconds.
+
+        If midnight_reset is true, start time is considered to be midnight of that day.
+        If false, start time is considered to be exactly 24 hours ago.
+        """
         start = 0
         if midnight_reset:
             start = (

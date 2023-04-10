@@ -159,7 +159,7 @@ class GoogleFitParse:
 
         return value
 
-    def _parse_object(self, request_id: str, response: FitnessObject):
+    def _parse_object(self, request_id: str, response: FitnessObject) -> None:
         """Parse the given fit object from the API according to the passed request_id."""
         # Sensor types where data is returned as integer and needs summing
         if request_id in ["activeMinutes", "steps"]:
@@ -167,6 +167,7 @@ class GoogleFitParse:
         # Sensor types where data is returned as float and needs summing
         elif request_id in ["calories", "distance", "heartMinutes"]:
             self.data[request_id] = self._sum_points_float(response)
+        # Sleep types need special handling to determine sleep segment type
         elif request_id in [
             "awakeSeconds",
             "lightSleepSeconds",
@@ -177,7 +178,6 @@ class GoogleFitParse:
                 sleep_type = point.get("value")[0].get("intVal")
                 start_time = point.get("startTimeNanos")
                 end_time = point.get("endTimeNanos")
-                # Sleep type 3 (out-of-bed is not support)
                 if (
                     sleep_type is not None
                     and start_time is not None
@@ -189,6 +189,7 @@ class GoogleFitParse:
                         if self.data[sleep_stage] is None:
                             self.data[sleep_stage] = 0
 
+                        # Time is in nanoseconds, need to convert to seconds
                         self.data[sleep_stage] += (
                             int(end_time) - int(start_time)
                         ) / 1000000000
@@ -197,7 +198,7 @@ class GoogleFitParse:
                 f"Unknown request ID specified for parsing: {request_id}"
             )
 
-    def _parse_session(self, request_id: str, response: FitnessSessionResponse):
+    def _parse_session(self, request_id: str, response: FitnessSessionResponse) -> None:
         """Parse the given session data from the API according to the passed request_id."""
         if request_id == "sleepSeconds":
             # Sum all the session times (in milliseconds) from within the response
@@ -206,14 +207,15 @@ class GoogleFitParse:
                 summed_millis += int(session.get("endTimeMillis")) - int(
                     session.get("startTimeMillis")
                 )
+            # Time is in milliseconds, need to convert to seconds
             self.data["sleepSeconds"] = summed_millis / 1000
         else:
             raise UpdateFailed(
                 f"Unknown request ID specified for parsing: {request_id}"
             )
 
-    def _parse_point(self, request_id: str, response: FitnessDataPoint):
-        """Parse the given fit data point from the API according to the passed request_id."""
+    def _parse_point(self, request_id: str, response: FitnessDataPoint) -> None:
+        """Parse the given single data point from the API according to the passed request_id."""
         # Sensor types where data is returned as integer and needs summing
         if request_id in ["height", "weight"]:
             self.data[request_id] = self._get_first_data_point(response)
