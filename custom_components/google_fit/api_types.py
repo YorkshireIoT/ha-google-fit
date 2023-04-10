@@ -26,6 +26,11 @@ class FitnessData(TypedDict):
     height: Optional[float]
     weight: Optional[float]
     steps: Optional[int]
+    awakeSeconds: Optional[float]
+    sleepSeconds: Optional[float]
+    lightSleepSeconds: Optional[float]
+    deepSleepSeconds: Optional[float]
+    remSleepSeconds: Optional[float]
 
 
 class FitnessValue(TypedDict):
@@ -82,9 +87,61 @@ class FitnessDataPoint(TypedDict):
     nextPageToken: str
 
 
+class FitnessDataStream(TypedDict):
+    """Minimal representation of a data source returned from the Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.html#list
+    """
+
+    dataStreamName: str
+    dataStreamId: str
+    type: str
+
+
+class FitnessDataSource(TypedDict):
+    """Minimal representation of a data source returned from the Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.html#list
+    """
+
+    dataSource: list[FitnessDataStream]
+
+
+class FitnessSession(TypedDict):
+    """Representation of a single session returned in response from Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.sessions.html#list
+    """
+
+    activeTimeMillis: str
+    activityType: int
+    description: str
+    endTimeMillis: str
+    id: str
+    modifiedTimeMillis: str
+    name: str
+    startTimeMillis: str
+
+
+class FitnessSessionResponse(TypedDict):
+    """Representation of a session response returned from the Google Fit API.
+
+    See:
+    https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.sessions.html#list
+    """
+
+    deletedSession: None
+    hasMoreData: None
+    nextPageToken: Optional[str]
+    session: list[FitnessSession]
+
+
 @dataclass
 class GoogleFitSensorDescription(SensorEntityDescription):
     """Extends Sensor Description types to add necessary component values."""
 
-    data_key: str | None = None
-    source: str | None = None
+    data_key: str = "undefined"
+    source: str = "undefined"

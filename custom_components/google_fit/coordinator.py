@@ -10,8 +10,14 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 from homeassistant.helpers.config_entry_oauth2_flow import OAuth2Session
-from .api import AsyncConfigEntryAuth
-from .api_types import FitService, FitnessData, FitnessObject, FitnessDataPoint
+from .api import AsyncConfigEntryAuth, GoogleFitParse
+from .api_types import (
+    FitService,
+    FitnessData,
+    FitnessObject,
+    FitnessDataPoint,
+    FitnessSessionResponse,
+)
 from .const import DOMAIN, LOGGER, ENTITY_DESCRIPTIONS
 
 
@@ -51,8 +57,25 @@ class Coordinator(DataUpdateCoordinator):
         """Return the current data, or None is data is not available."""
         return self.fitness_data
 
-    def _get_interval(self):
-        start = int(datetime.today().date().strftime("%s")) * 1000000000
+    def _get_interval(self, midnight_reset: bool = True) -> str:
+        """Return the necessary interval for API queries, with start and end time in nanoseconds.
+
+        If midnight_reset is true, start time is considered to be midnight of that day.
+        If false, start time is considered to be exactly 24 hours ago.
+        """
+        start = 0
+        if midnight_reset:
+            start = (
+                int(
+                    datetime.combine(
+                        datetime.today().date(), datetime.min.time()
+                    ).timestamp()
+                )
+                * 1000000000
+            )
+        # Make start time exactly 24 hours ago
+        else:
+            start = (int(datetime.today().timestamp()) - 60 * 60 * 24) * 1000000000
         now = int(datetime.today().timestamp() * 1000000000)
         return f"{start}-{now}"
 
@@ -62,17 +85,7 @@ class Coordinator(DataUpdateCoordinator):
         try:
             async with async_timeout.timeout(30):
                 service = await self._auth.get_resource(self.hass)
-
-                received_data = FitnessData(
-                    lastUpdate=datetime.now(),
-                    activeMinutes=None,
-                    calories=None,
-                    distance=None,
-                    heartMinutes=None,
-                    height=None,
-                    weight=None,
-                    steps=None,
-                )
+                parser = GoogleFitParse()
 
                 def _get_data(source: str, dataset: str) -> FitnessObject:
                     return (
@@ -83,7 +96,7 @@ class Coordinator(DataUpdateCoordinator):
                         .execute()
                     )
 
-                def _get_data_changes(source: str) -> FitnessObject:
+                def _get_data_changes(source: str) -> FitnessDataPoint:
                     return (
                         service.users()
                         .dataSources()
@@ -92,63 +105,65 @@ class Coordinator(DataUpdateCoordinator):
                         .execute()
                     )
 
-                def _sum_points_int(response: FitnessObject) -> int:
-                    counter = 0
-                    for point in response.get("point"):
-                        value = point.get("value")[0].get("intVal")
-                        if value is not None:
-                            counter += value
-                    return counter
-
-                def _sum_points_float(response: FitnessObject) -> float:
-                    counter = 0
-                    for point in response.get("point"):
-                        value = point.get("value")[0].get("fpVal")
-                        if value is not None:
-                            counter += value
-                    return round(counter, 2)
-
-                def _get_first_data_point(response: FitnessDataPoint) -> float | None:
-                    value = None
-                    data_points = response.get("insertedDataPoint")
-                    if len(data_points) > 0:
-                        values = data_points[0].get("value")
-                        if len(values) > 0:
-                            value = round(values[0].get("fpVal"), 2)
-
-                    return value
-
-                def parse_response(
-                    request_id: str, response: FitnessObject | FitnessDataPoint
-                ) -> None:
-                    # Sensor types where data is returned as integer and needs summing
-                    if request_id in ["activeMinutes", "steps"]:
-                        received_data[request_id] = _sum_points_int(response)
-                    # Sensor types where data is returned as float and needs summing
-                    elif request_id in ["calories", "distance", "heartMinutes"]:
-                        received_data[request_id] = _sum_points_float(response)
-                    # Sensor types where data is returned as single float point (no summing)
-                    elif request_id in ["height", "weight"]:
-                        received_data[request_id] = _get_first_data_point(response)
-                    else:
-                        raise UpdateFailed(
-                            f"Unknown request ID specified for parsing: {request_id}"
+                def _get_session(activity_id: int) -> FitnessSessionResponse:
+                    """Return a list of sessions for the activity whose end time was in last 24h."""
+                    end_time = datetime.utcnow().isoformat() + "Z"
+                    start_time = (
+                        datetime.utcnow() - timedelta(days=1)
+                    ).isoformat() + "Z"
+                    return (
+                        service.users()
+                        .sessions()
+                        .list(
+                            userId="me",
+                            activityType=activity_id,
+                            startTime=start_time,
+                            endTime=end_time,
                         )
+                        .execute()
+                    )
 
-                dataset = self._get_interval()
+                fetched_sleep = False
                 for entity in ENTITY_DESCRIPTIONS:
-                    response = {}
-                    if entity.data_key not in ["height", "weight"]:
+                    if entity.data_key in [
+                        "activeMinutes",
+                        "calories",
+                        "distance",
+                        "heartMinutes",
+                        "steps",
+                    ]:
+                        dataset = self._get_interval()
                         response = await self.hass.async_add_executor_job(
                             _get_data, entity.source, dataset
                         )
+                        parser.parse(entity.data_key, fit_object=response)
+                    elif entity.data_key in [
+                        "awakeSeconds",
+                        "lightSleepSeconds",
+                        "deepSleepSeconds",
+                        "remSleepSeconds",
+                    ]:
+                        # Only need to call once to get all different sleep segments
+                        if fetched_sleep is False:
+                            dataset = self._get_interval(False)
+                            response = await self.hass.async_add_executor_job(
+                                _get_data, entity.source, dataset
+                            )
+                            fetched_sleep = True
+                            parser.parse(entity.data_key, fit_object=response)
+                    elif entity.data_key == "sleepSeconds":
+                        response = await self.hass.async_add_executor_job(
+                            _get_session, 72
+                        )
+                        parser.parse(entity.data_key, fit_session=response)
+                    # Height and weight
                     else:
                         response = await self.hass.async_add_executor_job(
                             _get_data_changes, entity.source
                         )
-                    parse_response(entity.data_key, response)
+                        parser.parse(entity.data_key, fit_point=response)
 
-                self.fitness_data = received_data
+                self.fitness_data = parser.fit_data
 
         except Exception as err:
             raise UpdateFailed(f"Error communicating with API: {err}") from err
