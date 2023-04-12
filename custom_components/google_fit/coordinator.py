@@ -3,7 +3,9 @@ from __future__ import annotations
 
 from datetime import timedelta, datetime
 import async_timeout
+from googleapiclient.http import HttpError
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
@@ -165,5 +167,11 @@ class Coordinator(DataUpdateCoordinator):
 
                 self.fitness_data = parser.fit_data
 
+        except HttpError as err:
+            if 400 <= err.status_code < 500:
+                raise ConfigEntryAuthFailed(
+                    "OAuth session is not valid, re-authentication required."
+                ) from err
+            raise err
         except Exception as err:
             raise UpdateFailed(f"Error communicating with API: {err}") from err
