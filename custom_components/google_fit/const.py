@@ -6,7 +6,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
     SensorDeviceClass,
 )
-from homeassistant.const import UnitOfTime, UnitOfLength, UnitOfMass
+from homeassistant.const import UnitOfTime, UnitOfLength, UnitOfMass, UnitOfPressure
 
 from .api_types import GoogleFitSensorDescription
 
@@ -25,6 +25,8 @@ DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/fitness.nutrition.read",
     "https://www.googleapis.com/auth/fitness.location.read",
     "https://www.googleapis.com/auth/fitness.sleep.read",
+    "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+    "https://www.googleapis.com/auth/fitness.heart_rate.read",
 ]
 
 # Sleep Data Enum. Taken from:
@@ -159,5 +161,44 @@ ENTITY_DESCRIPTIONS = (
         device_class=SensorDeviceClass.DURATION,
         source="derived:com.google.sleep.segment:com.google.android.gms:merged",
         data_key="remSleepSeconds",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Heart Rate",
+        icon="mdi:heart-pulse",
+        native_unit_of_measurement="bpm",
+        state_class=SensorStateClass.MEASUREMENT,
+        source="derived:com.google.heart_rate.bpm:com.google.android.gms:merge_heart_rate_bpm",
+        data_key="heartRate",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Resting Heart Rate",
+        icon="mdi:heart",
+        native_unit_of_measurement="bpm",
+        state_class=SensorStateClass.MEASUREMENT,
+        source="derived:com.google.heart_rate.bpm:com.google.android.gms:"
+        + "resting_heart_rate<-merge_heart_rate_bpm",
+        data_key="heartRateResting",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Blood Pressure Systolic",
+        icon="mdi:heart-box",
+        native_unit_of_measurement=UnitOfPressure.MMHG,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.PRESSURE,
+        source="derived:com.google.blood_pressure:com.google.android.gms:merged",
+        data_key="bloodPressureSystolic",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Blood Pressure Diastolic",
+        icon="mdi:heart-box-outline",
+        native_unit_of_measurement=UnitOfPressure.MMHG,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.PRESSURE,
+        source="derived:com.google.blood_pressure:com.google.android.gms:merged",
+        data_key="bloodPressureDiastolic",
     ),
 )

@@ -31,6 +31,10 @@ class FitnessData(TypedDict):
     lightSleepSeconds: Optional[float]
     deepSleepSeconds: Optional[float]
     remSleepSeconds: Optional[float]
+    heartRate: Optional[float]
+    heartRateResting: Optional[float]
+    bloodPressureSystolic: Optional[float]
+    bloodPressureDiastolic: Optional[float]
 
 
 class FitnessValue(TypedDict):
