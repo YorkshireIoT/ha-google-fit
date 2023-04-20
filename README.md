@@ -29,6 +29,15 @@ Platform | Name |Description
 `sensor` | `rem_sleep_time_past_24h` | [REM sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
 `sensor` | `awake_time_past_24h` | [Awake][sleep] time during a sleep session over the past 24 hours. Not overall daily awake time. May not be available depending on sleep data provider.
 `sensor` | `total_sleep_time_past_24h` | [Overall sleep][sleep] time over the past 24 hours.
+`sensor` | `blood_pressure_diastolic` | Most recent Diastolic [blood pressure][blood-pressure] reading.
+`sensor` | `blood_pressure_systolic` | Most recent Systolic [blood pressure][blood-pressure] reading.
+`sensor` | `heart_rate` | Most recent [heart rate][heart-rate] measurement.
+`sensor` | `resting_heart_rate` | Most recent resting [heart rate][heart-rate] measurement.
+
+> Please note, there is a delay (roughly 30-60 minutes) between sensor measurements being recorded on the Google Fit
+> app and the data then being available to query of the rest API. As such, although this integration polls the API
+> more frequently than this it will take at least this length of time for your data to appear in Home Assistant.
+> It is not instantaneous.
 
 ## Prerequisites
 
@@ -127,3 +136,5 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 [height]: https://developers.google.com/fit/datatypes/health#height
 [weight]: https://developers.google.com/fit/datatypes/health#weight
 [sleep]: https://developers.google.com/fit/datatypes/health#sleep
+[heart-rate]: https://developers.google.com/fit/datatypes/health#heart_rate
+[blood-pressure]: https://developers.google.com/fit/datatypes/health#blood_pressure
