@@ -105,6 +105,10 @@ class GoogleFitParse:
             lightSleepSeconds=None,
             deepSleepSeconds=None,
             remSleepSeconds=None,
+            heartRate=None,
+            heartRateResting=None,
+            bloodPressureSystolic=None,
+            bloodPressureDiastolic=None,
         )
 
     def _sum_points_int(self, response: FitnessObject) -> int:
@@ -123,16 +127,21 @@ class GoogleFitParse:
                 counter += value
         return round(counter, 2)
 
-    def _get_first_data_point(self, response: FitnessDataPoint) -> float | None:
+    def _get_latest_data_point(
+        self, response: FitnessDataPoint, index: int = 0
+    ) -> float | None:
         value = None
         data_points = response.get("insertedDataPoint")
-        if len(data_points) > 0:
-            values = data_points[0].get("value")
-            if len(values) > 0:
-                data_point = values[0].get("fpVal")
-                if data_point is not None:
-                    value = round(data_point, 2)
-
+        latest_time = 0
+        for point in data_points:
+            if int(point.get("endTimeNanos")) > latest_time:
+                values = point.get("value")
+                if len(values) > 0:
+                    data_point = values[index].get("fpVal")
+                    if data_point is not None:
+                        # Update the latest found time and update the value
+                        latest_time = int(point.get("endTimeNanos"))
+                        value = round(data_point, 2)
         return value
 
     def _parse_object(self, request_id: str, response: FitnessObject) -> None:
@@ -192,9 +201,16 @@ class GoogleFitParse:
 
     def _parse_point(self, request_id: str, response: FitnessDataPoint) -> None:
         """Parse the given single data point from the API according to the passed request_id."""
-        # Sensor types where data is returned as integer and needs summing
-        if request_id in ["height", "weight"]:
-            self.data[request_id] = self._get_first_data_point(response)
+        if request_id in [
+            "height",
+            "weight",
+            "heartRate",
+            "heartRateResting",
+            "bloodPressureSystolic",
+        ]:
+            self.data[request_id] = self._get_latest_data_point(response)
+        elif request_id == "bloodPressureDiastolic":
+            self.data[request_id] = self._get_latest_data_point(response, 1)
         else:
             raise UpdateFailed(
                 f"Unknown request ID specified for parsing: {request_id}"

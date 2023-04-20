@@ -158,7 +158,7 @@ class Coordinator(DataUpdateCoordinator):
                             _get_session, 72
                         )
                         parser.parse(entity.data_key, fit_session=response)
-                    # Height and weight
+                    # Single data point fetches
                     else:
                         response = await self.hass.async_add_executor_job(
                             _get_data_changes, entity.source
