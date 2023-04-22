@@ -114,7 +114,7 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
-        name="Awake Time Past 24h",
+        name="Awake Time",
         icon="mdi:sun-clock",
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -124,7 +124,7 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
-        name="Total Sleep Time Past 24h",
+        name="Sleep",
         icon="mdi:bed-clock",
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -134,7 +134,7 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
-        name="Light Sleep Time Past 24h",
+        name="Light Sleep",
         icon="mdi:power-sleep",
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -144,7 +144,7 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
-        name="Deep Sleep Time Past 24h",
+        name="Deep Sleep",
         icon="mdi:sleep",
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_class=SensorStateClass.TOTAL_INCREASING,
@@ -154,7 +154,7 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
-        name="REM Sleep Time Past 24h",
+        name="REM Sleep",
         icon="mdi:chat-sleep",
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_class=SensorStateClass.TOTAL_INCREASING,
