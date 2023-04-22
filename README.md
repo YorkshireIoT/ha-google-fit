@@ -24,11 +24,11 @@ Platform | Name |Description
 `sensor` | `height` | [Height][height] (metres).
 `sensor` | `weight` | [Weight][weight] (kilograms).
 `sensor` | `steps` | [Number of steps][steps] taken. Reset daily.
-`sensor` | `deep_sleep_time_past_24h` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
-`sensor` | `light_sleep_time_past_24h` | [Light sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
-`sensor` | `rem_sleep_time_past_24h` | [REM sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
-`sensor` | `awake_time_past_24h` | [Awake][sleep] time during a sleep session over the past 24 hours. Not overall daily awake time. May not be available depending on sleep data provider.
-`sensor` | `total_sleep_time_past_24h` | [Overall sleep][sleep] time over the past 24 hours.
+`sensor` | `deep_sleep` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
+`sensor` | `light_sleep` | [Light sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
+`sensor` | `rem_sleep` | [REM sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
+`sensor` | `awake_time` | [Awake][sleep] time during a sleep session over the past 24 hours. Not overall daily awake time. May not be available depending on sleep data provider.
+`sensor` | `sleep` | [Overall sleep][sleep] time over the past 24 hours.
 `sensor` | `blood_pressure_diastolic` | Most recent Diastolic [blood pressure][blood-pressure] reading.
 `sensor` | `blood_pressure_systolic` | Most recent Systolic [blood pressure][blood-pressure] reading.
 `sensor` | `heart_rate` | Most recent [heart rate][heart-rate] measurement.
