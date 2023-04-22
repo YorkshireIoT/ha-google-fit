@@ -6,7 +6,13 @@ from homeassistant.components.sensor import (
     SensorStateClass,
     SensorDeviceClass,
 )
-from homeassistant.const import UnitOfTime, UnitOfLength, UnitOfMass, UnitOfPressure
+from homeassistant.const import (
+    UnitOfTime,
+    UnitOfLength,
+    UnitOfMass,
+    UnitOfPressure,
+    UnitOfVolume,
+)
 
 from .api_types import GoogleFitSensorDescription
 
@@ -200,5 +206,15 @@ ENTITY_DESCRIPTIONS = (
         device_class=SensorDeviceClass.PRESSURE,
         source="derived:com.google.blood_pressure:com.google.android.gms:merged",
         data_key="bloodPressureDiastolic",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Hydration",
+        icon="mdi:cup-water",
+        native_unit_of_measurement=UnitOfVolume.LITERS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        device_class=SensorDeviceClass.VOLUME,
+        source="derived:com.google.hydration:com.google.android.gms:merged",
+        data_key="hydration",
     ),
 )
