@@ -133,6 +133,7 @@ class Coordinator(DataUpdateCoordinator):
                         "distance",
                         "heartMinutes",
                         "steps",
+                        "hydration",
                     ]:
                         dataset = self._get_interval()
                         response = await self.hass.async_add_executor_job(

@@ -35,6 +35,7 @@ class FitnessData(TypedDict):
     heartRateResting: Optional[float]
     bloodPressureSystolic: Optional[float]
     bloodPressureDiastolic: Optional[float]
+    hydration: Optional[float]
 
 
 class FitnessValue(TypedDict):

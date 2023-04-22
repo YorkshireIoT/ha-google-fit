@@ -109,23 +109,34 @@ class GoogleFitParse:
             heartRateResting=None,
             bloodPressureSystolic=None,
             bloodPressureDiastolic=None,
+            hydration=None,
         )
 
-    def _sum_points_int(self, response: FitnessObject) -> int:
+    def _sum_points_int(self, response: FitnessObject) -> int | None:
         counter = 0
+        found_value = False
         for point in response.get("point"):
             value = point.get("value")[0].get("intVal")
             if value is not None:
+                found_value = True
                 counter += value
-        return counter
+        if found_value:
+            return counter
+        # If no value is found, return None to keep sensor value as "Unknown"
+        return None
 
-    def _sum_points_float(self, response: FitnessObject) -> float:
+    def _sum_points_float(self, response: FitnessObject) -> float | None:
         counter = 0
+        found_value = False
         for point in response.get("point"):
             value = point.get("value")[0].get("fpVal")
             if value is not None:
+                found_value = True
                 counter += value
-        return round(counter, 2)
+        if found_value:
+            return round(counter, 2)
+        # If no value is found, return None to keep sensor value as "Unknown"
+        return None
 
     def _get_latest_data_point(
         self, response: FitnessDataPoint, index: int = 0
@@ -150,7 +161,7 @@ class GoogleFitParse:
         if request_id in ["activeMinutes", "steps"]:
             self.data[request_id] = self._sum_points_int(response)
         # Sensor types where data is returned as float and needs summing
-        elif request_id in ["calories", "distance", "heartMinutes"]:
+        elif request_id in ["calories", "distance", "heartMinutes", "hydration"]:
             self.data[request_id] = self._sum_points_float(response)
         # Sleep types need special handling to determine sleep segment type
         elif request_id in [
