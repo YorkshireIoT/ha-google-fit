@@ -23,6 +23,9 @@ NAME: Final = "Google Fit"
 DOMAIN: Final = "google_fit"
 MANUFACTURER: Final = "Google, Inc."
 
+# Default Configuration Values
+DEFAULT_SCAN_INTERVAL = 5
+
 # Required Scopes
 DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/userinfo.email",

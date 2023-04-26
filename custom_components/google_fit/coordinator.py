@@ -12,6 +12,8 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 from homeassistant.helpers.config_entry_oauth2_flow import OAuth2Session
+from homeassistant.const import CONF_SCAN_INTERVAL
+
 from .api import AsyncConfigEntryAuth, GoogleFitParse
 from .api_types import (
     FitService,
@@ -20,7 +22,7 @@ from .api_types import (
     FitnessDataPoint,
     FitnessSessionResponse,
 )
-from .const import DOMAIN, LOGGER, ENTITY_DESCRIPTIONS
+from .const import DOMAIN, LOGGER, ENTITY_DESCRIPTIONS, DEFAULT_SCAN_INTERVAL
 
 
 # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
@@ -44,7 +46,9 @@ class Coordinator(DataUpdateCoordinator):
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(minutes=1),
+            update_interval=timedelta(
+                minutes=config.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+            ),
         )
 
     @property

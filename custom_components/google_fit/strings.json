@@ -35,7 +35,7 @@
     "step": {
       "init": {
         "data": {
-          "fit_access": "Home Assistant access to Google Fit"
+          "scan_interval": "Minutes between REST API queries"
         }
       }
     }
