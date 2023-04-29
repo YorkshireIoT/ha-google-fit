@@ -43,12 +43,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await coordinator.async_config_entry_first_refresh()
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = dict(
-        {
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = {
             "auth": auth,
             "coordinator": coordinator,
         }
-    )
 
     await hass.config_entries.async_forward_entry_setup(entry, PLATFORM)
     entry.async_on_unload(entry.add_update_listener(update_listener))
