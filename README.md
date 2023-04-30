@@ -2,6 +2,7 @@
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
+[![GitHub Downloads][downloads-shield]][downloads-shield]
 [![License][license-shield]](LICENSE)
 
 [![hacs][hacsbadge]][hacs]
@@ -61,9 +62,8 @@ Instead, follow the instruction in the Official home Assistant Docs for [Google 
 1. Find the integration as `Google Fit`
 1. Click install.
 1. Restart Home Assistant.
-1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "Google Fit"
 
-#### Manual
+#### Custom Repository
 
 1. Go to Integrations
 1. Click on the 3 dots in the top right
@@ -71,7 +71,6 @@ Instead, follow the instruction in the Official home Assistant Docs for [Google 
 1. Add this repository as an integration (https://github.com/YorkshireIoT/ha-google-fit)
 1. Search for `Google Fit` and install
 1. Restart Home Assistant.
-1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "Google Fit"
 
 ### Manual
 
@@ -81,11 +80,15 @@ Instead, follow the instruction in the Official home Assistant Docs for [Google 
 1. Download _all_ the files from the `custom_components/google_fit/` directory (folder) in this repository.
 1. Place the files you downloaded in the new directory (folder) you created.
 1. Restart Home Assistant
-1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "Google Fit"
 
-## Configuration is done in the UI
+## Setup
 
-Just go to Integrations->Add Integration and follow the steps.
+Setup is done completely in the UI.
+Go to your integrations page by clicking the button below.
+
+[![Open your Home Assistant instance and show your integrations.](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/)
+
+Click "+ Add Integration", search for "Google Fit" and follow the steps.
 If you have set the app you created in the Credentials configuration to publish
 (which you should've done to avoid re-authentication problems) then you
 will probably see a warning step asking if you want to proceed.
@@ -93,7 +96,7 @@ will probably see a warning step asking if you want to proceed.
 You can hit "Advanced", then "Proceed" as *you* are the 'developer' of the app,
 as you created the app and credentials in your own account.
 
-### Configuration Example Screenshots
+### Setup Example Screenshots
 
 ![Add Integration](/res/add.png)
 ![Add Credentials](/res/add_credentials.png)
@@ -102,6 +105,15 @@ as you created the app and credentials in your own account.
 ![Access Request with Scopes](/res/wants_access.png)
 ![Link Account](/res/link_account.png)
 ![Finished](/res/success.png)
+
+## Configuration
+
+The following options can be tweaked after setting up the integration:
+
+Option | Description | Default
+------------ | ------------- | -------------
+Update interval | Minutes between REST API queries. Can be increased if you're exceeding API quota | 5 (minutes) |
+Unknown value | When there is no data available in your Google Fit account within the time period, set the sensor value to 0 or unknown | Set to 0 |
 
 
 ## Contributions are welcome!
@@ -120,6 +132,7 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
 [exampleimg]: example.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
+[downloads-shield]: https://img.shields.io/github/downloads/YorkshireIoT/ha-google-fit/total?style=for-the-badge
 [forum]: https://community.home-assistant.io/
 [license-shield]: https://img.shields.io/github/license/YorkshireIoT/ha-google-fit.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/badge/maintainer-%20%40YorkshireIoT-blue.svg?style=for-the-badge

@@ -22,7 +22,14 @@ from .api_types import (
     FitnessDataPoint,
     FitnessSessionResponse,
 )
-from .const import DOMAIN, LOGGER, ENTITY_DESCRIPTIONS, DEFAULT_SCAN_INTERVAL
+from .const import (
+    DOMAIN,
+    LOGGER,
+    ENTITY_DESCRIPTIONS,
+    DEFAULT_SCAN_INTERVAL,
+    DEFAULT_NO_DATA_USE_ZERO,
+    CONF_NO_DATA_USE_ZERO,
+)
 
 
 # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
@@ -32,6 +39,7 @@ class Coordinator(DataUpdateCoordinator):
     _auth: AsyncConfigEntryAuth
     _config: ConfigEntry
     fitness_data: FitnessData | None = None
+    _use_zero: bool
 
     def __init__(
         self,
@@ -42,6 +50,9 @@ class Coordinator(DataUpdateCoordinator):
         """Initialise."""
         self._auth = auth
         self._config = config
+        self._use_zero = config.options.get(
+            CONF_NO_DATA_USE_ZERO, DEFAULT_NO_DATA_USE_ZERO
+        )
         super().__init__(
             hass=hass,
             logger=LOGGER,
@@ -62,6 +73,11 @@ class Coordinator(DataUpdateCoordinator):
     def current_data(self) -> FitnessData | None:
         """Return the current data, or None is data is not available."""
         return self.fitness_data
+
+    @property
+    def use_zero(self) -> bool:
+        """Return the config option on whether to use zero for when there is no sensor data."""
+        return self._use_zero
 
     def _get_interval(self, midnight_reset: bool = True) -> str:
         """Return the necessary interval for API queries, with start and end time in nanoseconds.
