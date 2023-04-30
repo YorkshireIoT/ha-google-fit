@@ -55,6 +55,10 @@ class GoogleFitBlueprintSensor(GoogleFitEntity, SensorEntity):
             if value is not None:
                 self._attr_native_value = value
                 self.async_write_ha_state()
+            # If value is None but config says to use zero value to prevent unknown
+            elif self.coordinator.use_zero:
+                self._attr_native_value = 0
+                self.async_write_ha_state()
 
     @callback
     def _handle_coordinator_update(self) -> None:
