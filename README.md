@@ -116,6 +116,32 @@ Update interval | Minutes between REST API queries. Can be increased if you're e
 Unknown value | When there is no data available in your Google Fit account within the time period, set the sensor value to 0 or unknown | Set to 0 |
 
 
+## Adding Multiple Accounts
+
+Use the following steps to setup additional Google Fit accounts in Home Assistant.
+
+1. Go through all the steps in [Authentication Configuration](#authentication-configuration) for the
+second account, e.g. create a completely separate application cloud application, enable Fit API and create
+new credentials.
+1. Go to Integrations and click the 3 dots in the top right to go to Application Credentials.
+1. Click "Add Application Credentials", select "Google Fit" as the integration and add in the newly created
+credentials.
+1. Go through the configuration flow, making sure to pick the *correct* new Google account when prompted.
+1. Once completed you should now see multiple Google Fit integration credentials in the table.
+1. Go back to integration, click "Add Integration", search for Google Fit and then choose the newly created
+credentials as the implementation when prompted.
+
+## Reconfiguring badly configured credentials
+
+If you made a mistake somewhere when configuring your credentials, whether with the Google Cloud Console or
+within Home Assistant, you need to delete not just the integration to be prompted to reconfigure but also the
+*'bad'* credentials.
+
+To do this, go to the Integrations page and click the 3 dots in the top right and go to "Application Credentials".
+From there you can select the credentials and remove them.
+
+![Application Credentials](res/application_credentials.png)
+
 ## Contributions are welcome!
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)

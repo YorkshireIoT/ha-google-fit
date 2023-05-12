@@ -53,13 +53,17 @@ class Coordinator(DataUpdateCoordinator):
         self._use_zero = config.options.get(
             CONF_NO_DATA_USE_ZERO, DEFAULT_NO_DATA_USE_ZERO
         )
+        update_time = config.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+        LOGGER.debug(
+            "Setting up Google Fit Coordinator. Use zero=%s and updating every %u minutes",
+            str(self._use_zero),
+            update_time,
+        )
         super().__init__(
             hass=hass,
             logger=LOGGER,
             name=DOMAIN,
-            update_interval=timedelta(
-                minutes=config.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-            ),
+            update_interval=timedelta(minutes=update_time),
         )
 
     @property
@@ -103,7 +107,10 @@ class Coordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self) -> FitService | None:
         """Update data via library."""
-
+        LOGGER.debug(
+            "Fetching data for account %s",
+            self._auth.oauth_session.config_entry.unique_id,
+        )
         try:
             async with async_timeout.timeout(30):
                 service = await self._auth.get_resource(self.hass)
