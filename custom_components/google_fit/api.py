@@ -19,7 +19,7 @@ from .api_types import (
     FitnessDataPoint,
     FitnessSessionResponse,
 )
-from .const import SLEEP_STAGE
+from .const import SLEEP_STAGE, LOGGER
 
 
 class AsyncConfigEntryAuth(OAuthClientAuthHandler):
@@ -123,6 +123,7 @@ class GoogleFitParse:
         if found_value:
             return counter
         # If no value is found, return None to keep sensor value as "Unknown"
+        LOGGER.debug("No int data points found for %s", response.get("dataSourceId"))
         return None
 
     def _sum_points_float(self, response: FitnessObject) -> float | None:
@@ -136,6 +137,7 @@ class GoogleFitParse:
         if found_value:
             return round(counter, 2)
         # If no value is found, return None to keep sensor value as "Unknown"
+        LOGGER.debug("No float data points found for %s", response.get("dataSourceId"))
         return None
 
     def _get_latest_data_point(
@@ -153,7 +155,58 @@ class GoogleFitParse:
                         # Update the latest found time and update the value
                         latest_time = int(point.get("endTimeNanos"))
                         value = round(data_point, 2)
+        if value is None:
+            LOGGER.debug("No data points found for %s", response.get("dataSourceId"))
         return value
+
+    def _parse_sleep(self, response: FitnessObject) -> None:
+        found_point = False
+        data_points = response.get("point")
+
+        for point in data_points:
+            found_point = True
+            sleep_type = point.get("value")[0].get("intVal")
+            start_time = point.get("startTimeNanos")
+            end_time = point.get("endTimeNanos")
+            if (
+                sleep_type is not None
+                and start_time is not None
+                and end_time is not None
+            ):
+                sleep_stage = SLEEP_STAGE.get(sleep_type)
+                if sleep_stage == "Out-of-bed":
+                    LOGGER.debug("Out of bed sleep sensor not supported. Ignoring.")
+                elif sleep_stage is not None:
+                    # If field is still at None, initialise it to zero
+                    if self.data[sleep_stage] is None:
+                        self.data[sleep_stage] = 0
+
+                    if end_time >= start_time:
+                        self.data[sleep_stage] += (
+                            int(end_time) - int(start_time)
+                        ) / 1000000000
+                    else:
+                        raise UpdateFailed(
+                            "Invalid data from Google. End time "
+                            f"({end_time}) is less than the start time "
+                            f"({start_time})."
+                        )
+                else:
+                    raise UpdateFailed(
+                        f"Unknown sleep stage type. Got enum: {sleep_type}"
+                    )
+            else:
+                raise UpdateFailed(
+                    "Invalid data from Google. Got:\r"
+                    "Sleep Type: {sleep_type}\r"
+                    "Start Time (ns): {start_time}\r"
+                    "End Time (ns): {end_time}"
+                )
+
+        if found_point is False:
+            LOGGER.debug(
+                "No sleep type data points found. Values will be set to configured default."
+            )
 
     def _parse_object(self, request_id: str, response: FitnessObject) -> None:
         """Parse the given fit object from the API according to the passed request_id."""
@@ -170,25 +223,7 @@ class GoogleFitParse:
             "deepSleepSeconds",
             "remSleepSeconds",
         ]:
-            for point in response.get("point"):
-                sleep_type = point.get("value")[0].get("intVal")
-                start_time = point.get("startTimeNanos")
-                end_time = point.get("endTimeNanos")
-                if (
-                    sleep_type is not None
-                    and start_time is not None
-                    and end_time is not None
-                ):
-                    sleep_stage = SLEEP_STAGE.get(sleep_type)
-                    if sleep_stage is not None:
-                        # If field is still at None, initialise it to zero
-                        if self.data[sleep_stage] is None:
-                            self.data[sleep_stage] = 0
-
-                        # Time is in nanoseconds, need to convert to seconds
-                        self.data[sleep_stage] += (
-                            int(end_time) - int(start_time)
-                        ) / 1000000000
+            self._parse_sleep(response)
         else:
             raise UpdateFailed(
                 f"Unknown request ID specified for parsing: {request_id}"
@@ -198,13 +233,28 @@ class GoogleFitParse:
         """Parse the given session data from the API according to the passed request_id."""
         if request_id == "sleepSeconds":
             # Sum all the session times (in milliseconds) from within the response
-            summed_millis = 0
-            for session in response.get("session"):
+            summed_millis: int | None = None
+            sessions = response.get("session")
+            if sessions is None:
+                raise UpdateFailed(
+                    "Google Fit returned invalid sleep session data. Session data is None."
+                )
+            for session in sessions:
+                # Initialise data is it is None
+                if summed_millis is None:
+                    summed_millis = 0
+
                 summed_millis += int(session.get("endTimeMillis")) - int(
                     session.get("startTimeMillis")
                 )
-            # Time is in milliseconds, need to convert to seconds
-            self.data["sleepSeconds"] = summed_millis / 1000
+
+            if summed_millis is not None:
+                # Time is in milliseconds, need to convert to seconds
+                self.data["sleepSeconds"] = summed_millis / 1000
+            else:
+                LOGGER.debug(
+                    "No sleep sessions found for time period in Google Fit account."
+                )
         else:
             raise UpdateFailed(
                 f"Unknown request ID specified for parsing: {request_id}"
