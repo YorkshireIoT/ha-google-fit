@@ -47,7 +47,7 @@ DEFAULT_ACCESS = [
 SLEEP_STAGE: Final = {
     1: "awakeSeconds",
     2: "sleepSeconds",
-    # 3: "Out-of-bed", # Not supported
+    3: "Out-of-bed",  # Not supported
     4: "lightSleepSeconds",
     5: "deepSleepSeconds",
     6: "remSleepSeconds",
