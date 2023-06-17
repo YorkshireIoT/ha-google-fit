@@ -1,6 +1,6 @@
 """TypeDefinition for Google Fit API."""
 from datetime import datetime
-from typing import TypedDict, Optional, Any
+from typing import TypedDict, Any
 from collections.abc import Callable
 from dataclasses import dataclass
 from homeassistant.components.sensor import SensorEntityDescription
@@ -19,23 +19,23 @@ class FitnessData(TypedDict):
     """All the fitness data retrieved from the API."""
 
     lastUpdate: datetime
-    activeMinutes: Optional[float]
-    calories: Optional[float]
-    distance: Optional[float]
-    heartMinutes: Optional[float]
-    height: Optional[float]
-    weight: Optional[float]
-    steps: Optional[int]
-    awakeSeconds: Optional[float]
-    sleepSeconds: Optional[float]
-    lightSleepSeconds: Optional[float]
-    deepSleepSeconds: Optional[float]
-    remSleepSeconds: Optional[float]
-    heartRate: Optional[float]
-    heartRateResting: Optional[float]
-    bloodPressureSystolic: Optional[float]
-    bloodPressureDiastolic: Optional[float]
-    hydration: Optional[float]
+    activeMinutes: float | None
+    calories: float | None
+    distance: float | None
+    heartMinutes: float | None
+    height: float | None
+    weight: float | None
+    steps: int | None
+    awakeSeconds: float | None
+    sleepSeconds: float | None
+    lightSleepSeconds: float | None
+    deepSleepSeconds: float | None
+    remSleepSeconds: float | None
+    heartRate: float | None
+    heartRateResting: float | None
+    bloodPressureSystolic: float | None
+    bloodPressureDiastolic: float | None
+    hydration: float | None
 
 
 class FitnessValue(TypedDict):
@@ -45,9 +45,9 @@ class FitnessValue(TypedDict):
     https://googleapis.github.io/google-api-python-client/docs/dyn/fitness_v1.users.dataSources.datasets
     """
 
-    fpVal: Optional[float]
-    intVal: Optional[int]
-    stringVal: Optional[str]
+    fpVal: float | None
+    intVal: int | None
+    stringVal: str | None
 
 
 class FitnessPoint(TypedDict):
@@ -140,7 +140,7 @@ class FitnessSessionResponse(TypedDict):
 
     deletedSession: None
     hasMoreData: None
-    nextPageToken: Optional[str]
+    nextPageToken: str | None
     session: list[FitnessSession]
 
 
