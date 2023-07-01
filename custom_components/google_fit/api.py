@@ -110,6 +110,7 @@ class GoogleFitParse:
             bloodPressureSystolic=None,
             bloodPressureDiastolic=None,
             hydration=None,
+            oxygenSaturation=None,
         )
 
     def _sum_points_int(self, response: FitnessObject) -> int | None:
@@ -268,6 +269,7 @@ class GoogleFitParse:
             "heartRate",
             "heartRateResting",
             "bloodPressureSystolic",
+            "oxygenSaturation",
         ]:
             self.data[request_id] = self._get_latest_data_point(response)
         elif request_id == "bloodPressureDiastolic":

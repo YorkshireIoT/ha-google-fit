@@ -12,6 +12,7 @@ from homeassistant.const import (
     UnitOfMass,
     UnitOfPressure,
     UnitOfVolume,
+    PERCENTAGE,
 )
 
 from .api_types import GoogleFitSensorDescription
@@ -40,6 +41,7 @@ DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/fitness.sleep.read",
     "https://www.googleapis.com/auth/fitness.blood_pressure.read",
     "https://www.googleapis.com/auth/fitness.heart_rate.read",
+    "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
 ]
 
 # Sleep Data Enum. Taken from:
@@ -223,5 +225,15 @@ ENTITY_DESCRIPTIONS = (
         device_class=SensorDeviceClass.VOLUME,
         source="derived:com.google.hydration:com.google.android.gms:merged",
         data_key="hydration",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Oxygen Saturation",
+        icon="mdi:water-percent",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=None,
+        source="derived:com.google.oxygen_saturation:com.google.android.gms:merged",
+        data_key="oxygenSaturation",
     ),
 )
