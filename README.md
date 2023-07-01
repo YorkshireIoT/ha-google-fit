@@ -35,6 +35,7 @@ Platform | Name |Description
 `sensor` | `heart_rate` | Most recent [heart rate][heart-rate] measurement.
 `sensor` | `resting_heart_rate` | Most recent resting [heart rate][heart-rate] measurement.
 `sensor` | `hydration` | Total [water][hydration] consumed. Reset daily.
+`sensor` | `oxygen_saturation` | The most recent [blood oxygen][blood-oxygen] saturation measurement.
 
 > Please note, there is a delay (roughly 30-60 minutes) between sensor measurements being recorded on the Google Fit
 > app and the data then being available to query of the rest API. As such, although this integration polls the API
@@ -179,3 +180,4 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 [heart-rate]: https://developers.google.com/fit/datatypes/health#heart_rate
 [blood-pressure]: https://developers.google.com/fit/datatypes/health#blood_pressure
 [hydration]: https://developers.google.com/fit/datatypes/nutrition#hydration
+[blood-oxygen]: https://developers.google.com/fit/datatypes/health#oxygen_saturation

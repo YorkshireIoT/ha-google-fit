@@ -36,6 +36,7 @@ class FitnessData(TypedDict):
     bloodPressureSystolic: float | None
     bloodPressureDiastolic: float | None
     hydration: float | None
+    oxygenSaturation: float | None
 
 
 class FitnessValue(TypedDict):
