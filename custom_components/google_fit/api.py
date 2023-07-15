@@ -109,6 +109,7 @@ class GoogleFitParse:
             heartRateResting=None,
             bloodPressureSystolic=None,
             bloodPressureDiastolic=None,
+            bloodGlucose=None,
             hydration=None,
             oxygenSaturation=None,
         )
@@ -269,6 +270,7 @@ class GoogleFitParse:
             "heartRate",
             "heartRateResting",
             "bloodPressureSystolic",
+            "bloodGlucose",
             "oxygenSaturation",
         ]:
             self.data[request_id] = self._get_latest_data_point(response)
