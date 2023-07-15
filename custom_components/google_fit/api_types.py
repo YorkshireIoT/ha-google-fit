@@ -35,6 +35,7 @@ class FitnessData(TypedDict):
     heartRateResting: float | None
     bloodPressureSystolic: float | None
     bloodPressureDiastolic: float | None
+    bloodGlucose: float | None
     hydration: float | None
     oxygenSaturation: float | None
 
