@@ -40,6 +40,7 @@ DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/fitness.location.read",
     "https://www.googleapis.com/auth/fitness.sleep.read",
     "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+    "https://www.googleapis.com/auth/fitness.blood_glucose.read",
     "https://www.googleapis.com/auth/fitness.heart_rate.read",
     "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
 ]
@@ -215,6 +216,16 @@ ENTITY_DESCRIPTIONS = (
         device_class=SensorDeviceClass.PRESSURE,
         source="derived:com.google.blood_pressure:com.google.android.gms:merged",
         data_key="bloodPressureDiastolic",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Blood Glucose",
+        icon="mdi:water",
+        native_unit_of_measurement="mmol/L",
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=None,
+        source="derived:com.google.blood_glucose:com.google.android.gms:merged",
+        data_key="bloodGlucose",
     ),
     GoogleFitSensorDescription(
         key="google_fit",
