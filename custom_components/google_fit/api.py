@@ -99,6 +99,7 @@ class GoogleFitParse:
             heartMinutes=None,
             height=None,
             weight=None,
+            fat=None,
             temperature=None,
             steps=None,
             awakeSeconds=None,
@@ -268,6 +269,7 @@ class GoogleFitParse:
         if request_id in [
             "height",
             "weight",
+            "fat",
             "temperature",
             "heartRate",
             "heartRateResting",
