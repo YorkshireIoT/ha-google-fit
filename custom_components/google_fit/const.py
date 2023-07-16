@@ -122,6 +122,16 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
+        name="Fat",
+        icon="mdi:scale-balance",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=None,
+        source="derived:com.google.body.fat.percentage:com.google.android.gms:merged",
+        data_key="fat",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
         name="Temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
