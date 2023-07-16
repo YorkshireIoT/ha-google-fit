@@ -268,6 +268,7 @@ class GoogleFitParse:
         if request_id in [
             "height",
             "weight",
+            "temperature",
             "heartRate",
             "heartRateResting",
             "bloodPressureSystolic",
