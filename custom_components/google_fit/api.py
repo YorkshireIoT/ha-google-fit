@@ -95,6 +95,7 @@ class GoogleFitParse:
             lastUpdate=datetime.now(),
             activeMinutes=None,
             calories=None,
+            basalMetabolicRate=None,
             distance=None,
             heartMinutes=None,
             height=None,
@@ -269,6 +270,7 @@ class GoogleFitParse:
         if request_id in [
             "height",
             "weight",
+            "basalMetabolicRate",
             "fat",
             "temperature",
             "heartRate",
