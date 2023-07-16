@@ -12,6 +12,7 @@ from homeassistant.const import (
     UnitOfMass,
     UnitOfPressure,
     UnitOfVolume,
+    UnitOfTemperature,
     PERCENTAGE,
 )
 
@@ -36,6 +37,7 @@ DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/fitness.activity.read",
     "https://www.googleapis.com/auth/fitness.body.read",
+    "https://www.googleapis.com/auth/fitness.body_temperature.read",
     "https://www.googleapis.com/auth/fitness.nutrition.read",
     "https://www.googleapis.com/auth/fitness.location.read",
     "https://www.googleapis.com/auth/fitness.sleep.read",
@@ -117,6 +119,16 @@ ENTITY_DESCRIPTIONS = (
         device_class=SensorDeviceClass.WEIGHT,
         source="derived:com.google.weight:com.google.android.gms:merge_weight",
         data_key="weight",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Temperature",
+        icon="mdi:thermometer",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        source="derived:com.google.body.temperature:com.google.android.gms:merge",
+        data_key="temperature",
     ),
     GoogleFitSensorDescription(
         key="google_fit",
