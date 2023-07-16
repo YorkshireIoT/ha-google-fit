@@ -25,6 +25,7 @@ class FitnessData(TypedDict):
     heartMinutes: float | None
     height: float | None
     weight: float | None
+    fat: float | None
     temperature: float | None
     steps: int | None
     awakeSeconds: float | None
