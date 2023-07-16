@@ -99,6 +99,7 @@ class GoogleFitParse:
             heartMinutes=None,
             height=None,
             weight=None,
+            temperature=None,
             steps=None,
             awakeSeconds=None,
             sleepSeconds=None,
