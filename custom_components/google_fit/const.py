@@ -82,6 +82,16 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
+        name="Basal Metabolic Rate",
+        icon="mdi:target",
+        native_unit_of_measurement="kcal",
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=None,
+        source="derived:com.google.calories.bmr:com.google.android.gms:merged",
+        data_key="basalMetabolicRate",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
         name="Distance Travelled Daily",
         icon="mdi:run",
         native_unit_of_measurement=UnitOfLength.METERS,
