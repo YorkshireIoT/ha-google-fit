@@ -21,6 +21,7 @@ class FitnessData(TypedDict):
     lastUpdate: datetime
     activeMinutes: float | None
     calories: float | None
+    basalMetabolicRate: float | None
     distance: float | None
     heartMinutes: float | None
     height: float | None
