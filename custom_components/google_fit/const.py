@@ -142,7 +142,7 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
-        name="Temperature",
+        name="Body Temperature",
         icon="mdi:thermometer",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
