@@ -24,6 +24,8 @@ Platform | Name |Description
 `sensor` | `heart_points_daily` | [Heart Points][heart-points] earned. Reset daily.
 `sensor` | `height` | [Height][height] (metres).
 `sensor` | `weight` | [Weight][weight] (kilograms).
+`sensor` | `fat` | [Body Fat][fat] (percentage).
+`sensor` | `temperature` | [Body Temperature][temperature] (celcius).
 `sensor` | `steps` | [Number of steps][steps] taken. Reset daily.
 `sensor` | `deep_sleep` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
 `sensor` | `light_sleep` | [Light sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
@@ -34,6 +36,7 @@ Platform | Name |Description
 `sensor` | `blood_pressure_systolic` | Most recent Systolic [blood pressure][blood-pressure] reading.
 `sensor` | `heart_rate` | Most recent [heart rate][heart-rate] measurement.
 `sensor` | `resting_heart_rate` | Most recent resting [heart rate][heart-rate] measurement.
+`sensor` | `blood_glucose` | Latest [blood_glucose][blood-glucose] measurement (mmol/L).
 `sensor` | `hydration` | Total [water][hydration] consumed. Reset daily.
 `sensor` | `oxygen_saturation` | The most recent [blood oxygen][blood-oxygen] saturation measurement.
 
