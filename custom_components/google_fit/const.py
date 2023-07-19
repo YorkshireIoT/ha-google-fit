@@ -138,7 +138,7 @@ ENTITY_DESCRIPTIONS = (
         state_class=SensorStateClass.MEASUREMENT,
         device_class=None,
         source="derived:com.google.body.fat.percentage:com.google.android.gms:merged",
-        data_key="fat",
+        data_key="bodyFat",
     ),
     GoogleFitSensorDescription(
         key="google_fit",
