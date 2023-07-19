@@ -132,7 +132,7 @@ ENTITY_DESCRIPTIONS = (
     ),
     GoogleFitSensorDescription(
         key="google_fit",
-        name="Fat",
+        name="Body Fat",
         icon="mdi:scale-balance",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
