@@ -271,7 +271,7 @@ class GoogleFitParse:
             "height",
             "weight",
             "basalMetabolicRate",
-            "fat",
+            "bodyFat",
             "temperature",
             "heartRate",
             "heartRateResting",
