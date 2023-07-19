@@ -272,7 +272,7 @@ class GoogleFitParse:
             "weight",
             "basalMetabolicRate",
             "bodyFat",
-            "temperature",
+            "bodyTemperature",
             "heartRate",
             "heartRateResting",
             "bloodPressureSystolic",
