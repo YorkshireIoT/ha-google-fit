@@ -20,6 +20,7 @@ Platform | Name |Description
 -- | -- | --
 `sensor` | `active_minutes_daily` | [Active Minutes][active-minutes]. Reset daily.
 `sensor` | `calories_burnt_daily` | [Calories burnt][calories-burnt] (kcal). Reset daily.
+`sensor` | `basal_metabolic_rate` | [Base Metabolic Rate][basal-metabolic-rate] (kcal). Calories per day based on weight and activity.
 `sensor` | `distance_travelled_daily` | [Distance travelled][distance-travelled] (metres). Reset daily.
 `sensor` | `heart_points_daily` | [Heart Points][heart-points] earned. Reset daily.
 `sensor` | `height` | [Height][height] (metres).
@@ -174,13 +175,17 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 <!--Links to Google Docs for detailed information on sensors -->
 [active-minutes]: https://developers.google.com/fit/datatypes/activity#move_minutes
 [calories-burnt]: https://developers.google.com/fit/datatypes/activity#calories_burned
+[basal-metabolic-rate]: https://developers.google.com/fit/datatypes/activity#basal_metabolic_rate_bmr
 [distance-travelled]: https://developers.google.com/fit/datatypes/location#distance_delta
 [heart-points]: https://developers.google.com/fit/datatypes/activity#heart_points
 [steps]: https://developers.google.com/fit/datatypes/activity#step_count_delta
 [height]: https://developers.google.com/fit/datatypes/health#height
 [weight]: https://developers.google.com/fit/datatypes/health#weight
+[fat]: https://developers.google.com/fit/datatypes/health#body_fat_percentage
+[temperature]: https://developers.google.com/fit/datatypes/health#body_temperature
 [sleep]: https://developers.google.com/fit/datatypes/health#sleep
 [heart-rate]: https://developers.google.com/fit/datatypes/health#heart_rate
 [blood-pressure]: https://developers.google.com/fit/datatypes/health#blood_pressure
+[blood-glucose]: https://developers.google.com/fit/datatypes/health#blood_glucose
 [hydration]: https://developers.google.com/fit/datatypes/nutrition#hydration
 [blood-oxygen]: https://developers.google.com/fit/datatypes/health#oxygen_saturation
