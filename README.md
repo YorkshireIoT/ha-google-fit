@@ -25,7 +25,7 @@ Platform | Name |Description
 `sensor` | `height` | [Height][height] (metres).
 `sensor` | `weight` | [Weight][weight] (kilograms).
 `sensor` | `body_fat` | [Body Fat][fat] (percentage).
-`sensor` | `temperature` | [Body Temperature][temperature] (celcius).
+`sensor` | `body_temperature` | [Body Temperature][temperature] (celcius).
 `sensor` | `steps` | [Number of steps][steps] taken. Reset daily.
 `sensor` | `deep_sleep` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
 `sensor` | `light_sleep` | [Light sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
