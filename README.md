@@ -24,7 +24,7 @@ Platform | Name |Description
 `sensor` | `heart_points_daily` | [Heart Points][heart-points] earned. Reset daily.
 `sensor` | `height` | [Height][height] (metres).
 `sensor` | `weight` | [Weight][weight] (kilograms).
-`sensor` | `fat` | [Body Fat][fat] (percentage).
+`sensor` | `body_fat` | [Body Fat][fat] (percentage).
 `sensor` | `temperature` | [Body Temperature][temperature] (celcius).
 `sensor` | `steps` | [Number of steps][steps] taken. Reset daily.
 `sensor` | `deep_sleep` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
