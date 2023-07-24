@@ -95,10 +95,13 @@ class GoogleFitParse:
             lastUpdate=datetime.now(),
             activeMinutes=None,
             calories=None,
+            basalMetabolicRate=None,
             distance=None,
             heartMinutes=None,
             height=None,
             weight=None,
+            bodyFat=None,
+            bodyTemperature=None,
             steps=None,
             awakeSeconds=None,
             sleepSeconds=None,
@@ -109,6 +112,7 @@ class GoogleFitParse:
             heartRateResting=None,
             bloodPressureSystolic=None,
             bloodPressureDiastolic=None,
+            bloodGlucose=None,
             hydration=None,
             oxygenSaturation=None,
         )
@@ -266,9 +270,13 @@ class GoogleFitParse:
         if request_id in [
             "height",
             "weight",
+            "basalMetabolicRate",
+            "bodyFat",
+            "bodyTemperature",
             "heartRate",
             "heartRateResting",
             "bloodPressureSystolic",
+            "bloodGlucose",
             "oxygenSaturation",
         ]:
             self.data[request_id] = self._get_latest_data_point(response)

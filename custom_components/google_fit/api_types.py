@@ -21,10 +21,13 @@ class FitnessData(TypedDict):
     lastUpdate: datetime
     activeMinutes: float | None
     calories: float | None
+    basalMetabolicRate: float | None
     distance: float | None
     heartMinutes: float | None
     height: float | None
     weight: float | None
+    bodyFat: float | None
+    bodyTemperature: float | None
     steps: int | None
     awakeSeconds: float | None
     sleepSeconds: float | None
@@ -35,6 +38,7 @@ class FitnessData(TypedDict):
     heartRateResting: float | None
     bloodPressureSystolic: float | None
     bloodPressureDiastolic: float | None
+    bloodGlucose: float | None
     hydration: float | None
     oxygenSaturation: float | None
 

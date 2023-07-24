@@ -6,7 +6,7 @@
     "abort": {
       "already_configured": "Account is already configured",
       "already_in_progress": "Configuration flow is already in progress",
-      "api_disabled": "You must enable the Google Fit API in the Google Cloud Console",
+      "access_error": "Fit API Access error:\n{reason}\nAborting setup.",
       "cannot_connect": "Failed to connect",
       "code_expired": "Authentication code expired or credential setup is invalid, please try again.",
       "invalid_access_token": "Invalid access token",
