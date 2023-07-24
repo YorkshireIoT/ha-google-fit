@@ -12,6 +12,7 @@ from homeassistant.const import (
     UnitOfMass,
     UnitOfPressure,
     UnitOfVolume,
+    UnitOfTemperature,
     PERCENTAGE,
 )
 
@@ -36,10 +37,12 @@ DEFAULT_ACCESS = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/fitness.activity.read",
     "https://www.googleapis.com/auth/fitness.body.read",
+    "https://www.googleapis.com/auth/fitness.body_temperature.read",
     "https://www.googleapis.com/auth/fitness.nutrition.read",
     "https://www.googleapis.com/auth/fitness.location.read",
     "https://www.googleapis.com/auth/fitness.sleep.read",
     "https://www.googleapis.com/auth/fitness.blood_pressure.read",
+    "https://www.googleapis.com/auth/fitness.blood_glucose.read",
     "https://www.googleapis.com/auth/fitness.heart_rate.read",
     "https://www.googleapis.com/auth/fitness.oxygen_saturation.read",
 ]
@@ -76,6 +79,16 @@ ENTITY_DESCRIPTIONS = (
         device_class=None,
         source="derived:com.google.calories.expended:com.google.android.gms:merge_calories_expended",  # pylint: disable=line-too-long
         data_key="calories",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Basal Metabolic Rate",
+        icon="mdi:target",
+        native_unit_of_measurement="kcal",
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=None,
+        source="derived:com.google.calories.bmr:com.google.android.gms:merged",
+        data_key="basalMetabolicRate",
     ),
     GoogleFitSensorDescription(
         key="google_fit",
@@ -116,6 +129,26 @@ ENTITY_DESCRIPTIONS = (
         device_class=SensorDeviceClass.WEIGHT,
         source="derived:com.google.weight:com.google.android.gms:merge_weight",
         data_key="weight",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Body Fat",
+        icon="mdi:scale-balance",
+        native_unit_of_measurement=PERCENTAGE,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=None,
+        source="derived:com.google.body.fat.percentage:com.google.android.gms:merged",
+        data_key="bodyFat",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Body Temperature",
+        icon="mdi:thermometer",
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        source="derived:com.google.body.temperature:com.google.android.gms:merged",
+        data_key="bodyTemperature",
     ),
     GoogleFitSensorDescription(
         key="google_fit",
@@ -215,6 +248,16 @@ ENTITY_DESCRIPTIONS = (
         device_class=SensorDeviceClass.PRESSURE,
         source="derived:com.google.blood_pressure:com.google.android.gms:merged",
         data_key="bloodPressureDiastolic",
+    ),
+    GoogleFitSensorDescription(
+        key="google_fit",
+        name="Blood Glucose",
+        icon="mdi:water",
+        native_unit_of_measurement="mmol/L",
+        state_class=SensorStateClass.MEASUREMENT,
+        device_class=None,
+        source="derived:com.google.blood_glucose:com.google.android.gms:merged",
+        data_key="bloodGlucose",
     ),
     GoogleFitSensorDescription(
         key="google_fit",
