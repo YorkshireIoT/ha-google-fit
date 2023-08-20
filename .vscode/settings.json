@@ -11,6 +11,7 @@
         "LITERS",
         "Millis",
         "MMHG",
+        "mmol",
         "Nanos",
         "reauth",
         "websession"
