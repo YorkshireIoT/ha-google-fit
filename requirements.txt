@@ -2,4 +2,4 @@ colorlog==6.7.0
 homeassistant==2023.7.3
 pip>=21.0,<23.3
 ruff==0.0.286
-google-api-python-client==2.97.0
+google-api-python-client==2.98.0
