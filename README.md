@@ -53,28 +53,24 @@ Platform | Name |Description
 I will not try to duplicate what has already been documented countless times before as it will no doubt become out
 of date.
 
-Instead, follow the instruction in the Official home Assistant Docs for [Google Mail][google-mail] under the
+Instead, follow the instruction in the Official Home Assistant Docs for [Google Mail][google-mail] under the
 "Generate Client ID and Client Secret" section, replacing instructions for 'Gmail API' with 'Fit API'.
 
 ## Installation
 
 ### HACS (Recommend)
 
-#### Once available
+#### Prerequisites
 
+HACS Installed in Home Assistant: [Home Asssitant Community Store](https://hacs.xyz/)
+
+#### Steps
+
+1. Go to HACS
 1. Go to Integrations
 1. Click Explore & Download Repositories
 1. Find the integration as `Google Fit`
 1. Click install.
-1. Restart Home Assistant.
-
-#### Custom Repository
-
-1. Go to Integrations
-1. Click on the 3 dots in the top right
-1. Click Custom Repositories
-1. Add this repository as an integration (https://github.com/YorkshireIoT/ha-google-fit)
-1. Search for `Google Fit` and install
 1. Restart Home Assistant.
 
 ### Manual
@@ -158,7 +154,7 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 [commits-shield]: https://img.shields.io/github/commit-activity/y/YorkshireIoT/ha-google-fit.svg?style=for-the-badge
 [commits]: https://github.com/YorkshireIoT/ha-google-fit/commits/main
 [hacs]: https://github.com/hacs/integration
-[hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
+[hacsbadge]: https://img.shields.io/badge/HACS-Default-green.svg?style=for-the-badge
 [discord]: https://discord.gg/Qa5fW2R
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
 [exampleimg]: example.png
