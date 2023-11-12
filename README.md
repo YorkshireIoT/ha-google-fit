@@ -16,30 +16,30 @@ data within Home Assistant.
 
 **This integration will set up the following platforms.**
 
-Platform | Name |Description
--- | -- | --
-`sensor` | `active_minutes_daily` | [Active Minutes][active-minutes]. Reset daily.
-`sensor` | `calories_burnt_daily` | [Calories burnt][calories-burnt] (kcal). Reset daily.
-`sensor` | `basal_metabolic_rate` | [Base Metabolic Rate][basal-metabolic-rate] (kcal). Calories per day based on weight and activity.
-`sensor` | `distance_travelled_daily` | [Distance travelled][distance-travelled] (metres). Reset daily.
-`sensor` | `heart_points_daily` | [Heart Points][heart-points] earned. Reset daily.
-`sensor` | `height` | [Height][height] (metres).
-`sensor` | `weight` | [Weight][weight] (kilograms).
-`sensor` | `body_fat` | [Body Fat][fat] (percentage).
-`sensor` | `body_temperature` | [Body Temperature][temperature] (celsius).
-`sensor` | `steps` | [Number of steps][steps] taken. Reset daily.
-`sensor` | `deep_sleep` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
-`sensor` | `light_sleep` | [Light sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
-`sensor` | `rem_sleep` | [REM sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
-`sensor` | `awake_time` | [Awake][sleep] time during a sleep session over the past 24 hours. Not overall daily awake time. May not be available depending on sleep data provider.
-`sensor` | `sleep` | [Overall sleep][sleep] time over the past 24 hours.
-`sensor` | `blood_pressure_diastolic` | Most recent Diastolic [blood pressure][blood-pressure] reading.
-`sensor` | `blood_pressure_systolic` | Most recent Systolic [blood pressure][blood-pressure] reading.
-`sensor` | `heart_rate` | Most recent [heart rate][heart-rate] measurement.
-`sensor` | `resting_heart_rate` | Most recent resting [heart rate][heart-rate] measurement.
-`sensor` | `blood_glucose` | Latest [blood_glucose][blood-glucose] measurement (mmol/L).
-`sensor` | `hydration` | Total [water][hydration] consumed. Reset daily.
-`sensor` | `oxygen_saturation` | The most recent [blood oxygen][blood-oxygen] saturation measurement.
+Platform | Name | Description | Infrequent Update |
+-- | -- | -- | -- |
+`sensor` | `active_minutes_daily` | [Active Minutes][active-minutes]. Reset daily. | &#9744; |
+`sensor` | `calories_burnt_daily` | [Calories burnt][calories-burnt] (kcal). Reset daily. | &#9744; |
+`sensor` | `basal_metabolic_rate` | [Base Metabolic Rate][basal-metabolic-rate] (kcal). Calories per day based on weight and activity. | &#9744; |
+`sensor` | `distance_travelled_daily` | [Distance travelled][distance-travelled] (metres). Reset daily. | &#9744; |
+`sensor` | `heart_points_daily` | [Heart Points][heart-points] earned. Reset daily. | &#9744; |
+`sensor` | `height` | [Height][height] (metres). | &#9745; |
+`sensor` | `weight` | [Weight][weight] (kilograms). | &#9745; |
+`sensor` | `body_fat` | [Body Fat][fat] (percentage). | &#9745; |
+`sensor` | `body_temperature` | [Body Temperature][temperature] (celsius). | &#9745; |
+`sensor` | `steps` | [Number of steps][steps] taken. Reset daily. | &#9744; |
+`sensor` | `deep_sleep` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider. | &#9744; |
+`sensor` | `light_sleep` | [Light sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider. | &#9744; |
+`sensor` | `rem_sleep` | [REM sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider. | &#9744; |
+`sensor` | `awake_time` | [Awake][sleep] time during a sleep session over the past 24 hours. Not overall daily awake time. May not be available depending on sleep data provider. | &#9744; |
+`sensor` | `sleep` | [Overall sleep][sleep] time over the past 24 hours. | &#9744; |
+`sensor` | `blood_pressure_diastolic` | Most recent Diastolic [blood pressure][blood-pressure] reading. | &#9744; |
+`sensor` | `blood_pressure_systolic` | Most recent Systolic [blood pressure][blood-pressure] reading. | &#9744; |
+`sensor` | `heart_rate` | Most recent [heart rate][heart-rate] measurement. | &#9744; |
+`sensor` | `resting_heart_rate` | Most recent resting [heart rate][heart-rate] measurement. | &#9744; |
+`sensor` | `blood_glucose` | Latest [blood_glucose][blood-glucose] measurement (mmol/L). | &#9744; |
+`sensor` | `hydration` | Total [water][hydration] consumed. Reset daily. | &#9744; |
+`sensor` | `oxygen_saturation` | The most recent [blood oxygen][blood-oxygen] saturation measurement. | &#9744; |
 
 > Please note, there is a delay (roughly 30-60 minutes) between sensor measurements being recorded on the Google Fit
 > app and the data then being available to query of the rest API. As such, although this integration polls the API
@@ -114,6 +114,7 @@ The following options can be tweaked after setting up the integration:
 Option | Description | Default
 ------------ | ------------- | -------------
 Update interval | Minutes between REST API queries. Can be increased if you're exceeding API quota | 5 (minutes) |
+Infrequent Sensor Multiplier | Multiply the update interval by this for less frequently updated sensors, e.g. height. This reduces unnecessary API queries. | 12 (so default 5 mins update interval changes to an hour) |
 
 ## Unknown Sensor Behaviour
 
