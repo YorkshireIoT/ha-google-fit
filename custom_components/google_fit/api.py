@@ -23,7 +23,7 @@ from .api_types import (
     LastPointSensorDescription,
     SumSessionSensorDescription,
 )
-from .const import SLEEP_STAGE, LOGGER
+from .const import SLEEP_STAGE, LOGGER, NANOSECONDS_SECONDS_CONVERSION
 
 
 class AsyncConfigEntryAuth(OAuthClientAuthHandler):
@@ -92,6 +92,7 @@ class GoogleFitParse:
     """Parse raw data received from the Google Fit API."""
 
     data: FitnessData
+    unknown_sleep_warn: bool
 
     def __init__(self):
         """Initialise the data to base value and add a timestamp."""
@@ -120,6 +121,7 @@ class GoogleFitParse:
             hydration=None,
             oxygenSaturation=None,
         )
+        self.unknown_sleep_warn =  False
 
     def _sum_points_int(self, response: FitnessObject) -> int | None:
         counter = 0
@@ -197,30 +199,40 @@ class GoogleFitParse:
         for point in data_points:
             found_point = True
             sleep_type = point.get("value")[0].get("intVal")
-            start_time = point.get("startTimeNanos")
-            end_time = point.get("endTimeNanos")
+            start_time_ns = point.get("startTimeNanos")
+            end_time_ns = point.get("endTimeNanos")
             if (
                 sleep_type is not None
-                and start_time is not None
-                and end_time is not None
+                and start_time_ns is not None
+                and end_time_ns is not None
             ):
                 sleep_stage = SLEEP_STAGE.get(sleep_type)
+                start_time = int(start_time_ns) / NANOSECONDS_SECONDS_CONVERSION
+                start_time_str = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
+                end_time = int(end_time_ns) / NANOSECONDS_SECONDS_CONVERSION
+                end_time_str = datetime.fromtimestamp(end_time).strftime('%Y-%m-%d %H:%M:%S')
+
                 if sleep_stage == "Out-of-bed":
                     LOGGER.debug("Out of bed sleep sensor not supported. Ignoring.")
+                elif sleep_stage == "unspecified":
+                    LOGGER.warning(
+                        "Google Fit reported an unspecified or unknown value "
+                        "for sleep stage between %s and %s. Please report this as a bug to the "
+                        "original data provider. This will not be reported in "
+                        "Home Assistant.", start_time_str, end_time_str
+                    )
                 elif sleep_stage is not None:
                     # If field is still at None, initialise it to zero
                     if self.data[sleep_stage] is None:
                         self.data[sleep_stage] = 0
 
                     if end_time >= start_time:
-                        self.data[sleep_stage] += (
-                            int(end_time) - int(start_time)
-                        ) / 1000000000
+                        self.data[sleep_stage] += end_time - start_time
                     else:
                         raise UpdateFailed(
                             "Invalid data from Google. End time "
-                            f"({end_time}) is less than the start time "
-                            f"({start_time})."
+                            f"({end_time_str}) is less than the start time "
+                            f"({start_time_str})."
                         )
                 else:
                     raise UpdateFailed(

@@ -32,6 +32,7 @@ from .const import (
     DEFAULT_SCAN_INTERVAL,
     DEFAULT_NO_DATA_USE_ZERO,
     CONF_NO_DATA_USE_ZERO,
+    NANOSECONDS_SECONDS_CONVERSION,
 )
 
 
@@ -100,11 +101,12 @@ class Coordinator(DataUpdateCoordinator):
                         datetime.today().date(), datetime.min.time()
                     ).timestamp()
                 )
-                * 1000000000
+                * NANOSECONDS_SECONDS_CONVERSION
             )
         else:
-            start = (int(datetime.today().timestamp()) - interval_period) * 1000000000
-        now = int(datetime.today().timestamp() * 1000000000)
+            start = (int(datetime.today().timestamp()) - interval_period)
+            start = start * NANOSECONDS_SECONDS_CONVERSION
+        now = int(datetime.today().timestamp() * NANOSECONDS_SECONDS_CONVERSION)
         return f"{start}-{now}"
 
     async def _async_update_data(self) -> FitService | None:
