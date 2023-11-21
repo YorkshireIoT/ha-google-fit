@@ -29,12 +29,8 @@ NAME: Final = "Google Fit"
 DOMAIN: Final = "google_fit"
 MANUFACTURER: Final = "Google, Inc."
 
-# Configuration schema
-CONF_NO_DATA_USE_ZERO: Final = "use_zero"
-
 # Default Configuration Values
 DEFAULT_SCAN_INTERVAL = 5
-DEFAULT_NO_DATA_USE_ZERO = True
 
 # Useful constants
 NANOSECONDS_SECONDS_CONVERSION: Final = 1000000000

@@ -114,8 +114,52 @@ The following options can be tweaked after setting up the integration:
 Option | Description | Default
 ------------ | ------------- | -------------
 Update interval | Minutes between REST API queries. Can be increased if you're exceeding API quota | 5 (minutes) |
-Unknown value | When there is no data available in your Google Fit account within the time period, set the sensor value to 0 or unknown | Set to 0 |
 
+## Unknown Sensor Behaviour
+
+All sensors in this integration can be grouped into two categories; cumulative or individual.
+This is due to how data is reported in your Google Fit account. Every piece of data is only associated
+with a time period and has no underlying logic for running totals.
+
+For example, steps are reported like this in your account:
+
+* 1st January 2023 9:32:01 - 495
+* 2nd January 2023 11:54:03 - 34
+* 2nd January 2023 13:02:40 - 1005
+* 2nd January 2023 17:16:27 - 842
+
+There is then some built-in logic in this integration to work out what
+sensor we're dealing with, and to either sum up these values over a
+logical time period, or to just take the latest known value, when the
+sensor is something like height.
+
+> If you're interested in all the underlying logic, it's contained in
+> [api.py](/custom_components/google_fit/api.py).
+
+The behaviour of this integration when there is *no* data available in your account differs
+depending on the sensor category.
+
+*Cumulative* sensors will use 0 as their base value and this will be their value in Home Assistant
+if their is no data in your Google Fit account for that sensor.
+
+*Individual* sensors will only report a value if they can find some data in your Google Fit account.
+Otherwise, they will show `Unknown`.
+
+### Unavailable
+
+Besides `Unknown`, there is an additional Home Assistant sensor state; `Unavailable`.
+
+This state has nothing to do with if there is or isn't data in your account. It indicates some error
+in the fetching of the data. Your internet has stopped working, or maybe the Google servers are
+down. In some cases, it may also indicate there is a bug with this integration. If that is the case,
+please report it as a bug.
+
+There are no plans to ignore these data fetching issues and retain the last known sensor
+value. The reasoning for this is:
+
+* This is the correct representation of the sensors state, and
+* It indicates to the user that there is some underlying issue with the integration itself
+and this should not be hidden.s
 
 ## Adding Multiple Accounts
 
