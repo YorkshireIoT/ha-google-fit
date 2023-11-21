@@ -108,11 +108,11 @@ class GoogleFitParse:
             bodyFat=None,
             bodyTemperature=None,
             steps=None,
-            awakeSeconds=None,
-            sleepSeconds=None,
-            lightSleepSeconds=None,
-            deepSleepSeconds=None,
-            remSleepSeconds=None,
+            awakeSeconds=0,
+            sleepSeconds=0,
+            lightSleepSeconds=0,
+            deepSleepSeconds=0,
+            remSleepSeconds=0,
             heartRate=None,
             heartRateResting=None,
             bloodPressureSystolic=None,
@@ -123,7 +123,11 @@ class GoogleFitParse:
         )
         self.unknown_sleep_warn =  False
 
-    def _sum_points_int(self, response: FitnessObject) -> int | None:
+    def _sum_points_int(self, response: FitnessObject) -> int:
+        """Get the most recent integer point value.
+
+        If no data points exist, return 0.
+        """
         counter = 0
         found_value = False
         for point in response.get("point"):
@@ -131,13 +135,17 @@ class GoogleFitParse:
             if value is not None:
                 found_value = True
                 counter += value
-        if found_value:
-            return counter
-        # If no value is found, return None to keep sensor value as "Unknown"
-        LOGGER.debug("No int data points found for %s", response.get("dataSourceId"))
-        return None
 
-    def _sum_points_float(self, response: FitnessObject) -> float | None:
+        if not found_value:
+            LOGGER.debug("No int data points found for %s", response.get("dataSourceId"))
+
+        return counter
+
+    def _sum_points_float(self, response: FitnessObject) -> float:
+        """Get the most recent floating point value.
+
+        If no data points exist, return 0.
+        """
         counter = 0
         found_value = False
         for point in response.get("point"):
@@ -145,15 +153,19 @@ class GoogleFitParse:
             if value is not None:
                 found_value = True
                 counter += value
-        if found_value:
-            return round(counter, 2)
-        # If no value is found, return None to keep sensor value as "Unknown"
-        LOGGER.debug("No float data points found for %s", response.get("dataSourceId"))
-        return None
+
+        if not found_value:
+            LOGGER.debug("No float data points found for %s", response.get("dataSourceId"))
+
+        return round(counter, 2)
 
     def _get_latest_data_float(
         self, response: FitnessDataPoint, index: int = 0
     ) -> float | None:
+        """Get the most recent floating point value.
+
+        N.B. If no data exists in the account return None.
+        """
         value = None
         data_points = response.get("insertedDataPoint")
         latest_time = 0
@@ -175,6 +187,10 @@ class GoogleFitParse:
     def _get_latest_data_int(
         self, response: FitnessDataPoint, index: int = 0
     ) -> int | None:
+        """Get the most recent integer point value.
+
+        If no data exists in the account return None.
+        """
         value = None
         data_points = response.get("insertedDataPoint")
         latest_time = 0
@@ -193,11 +209,9 @@ class GoogleFitParse:
         return value
 
     def _parse_sleep(self, response: FitnessObject) -> None:
-        found_point = False
         data_points = response.get("point")
 
         for point in data_points:
-            found_point = True
             sleep_type = point.get("value")[0].get("intVal")
             start_time_ns = point.get("startTimeNanos")
             end_time_ns = point.get("endTimeNanos")
@@ -222,10 +236,6 @@ class GoogleFitParse:
                         "Home Assistant.", start_time_str, end_time_str
                     )
                 elif sleep_stage is not None:
-                    # If field is still at None, initialise it to zero
-                    if self.data[sleep_stage] is None:
-                        self.data[sleep_stage] = 0
-
                     if end_time >= start_time:
                         self.data[sleep_stage] += end_time - start_time
                     else:
@@ -246,11 +256,6 @@ class GoogleFitParse:
                     "End Time (ns): {end_time}"
                 )
 
-        if found_point is False:
-            LOGGER.debug(
-                "No sleep type data points found. Values will be set to configured default."
-            )
-
     def _parse_object(
         self, entity: SumPointsSensorDescription, response: FitnessObject
     ) -> None:
@@ -269,7 +274,7 @@ class GoogleFitParse:
     ) -> None:
         """Parse the given session data from the API according to the passed request_id."""
         # Sum all the session times (in milliseconds) from within the response
-        summed_millis: int | None = None
+        summed_millis: int = 0
         sessions = response.get("session")
         if sessions is None:
             raise UpdateFailed(
@@ -277,22 +282,12 @@ class GoogleFitParse:
                 "Session data is None."
             )
         for session in sessions:
-            # Initialise data if it is None
-            if summed_millis is None:
-                summed_millis = 0
-
             summed_millis += int(session.get("endTimeMillis")) - int(
                 session.get("startTimeMillis")
             )
 
-        if summed_millis is not None:
-            # Time is in milliseconds, need to convert to seconds
-            self.data[entity.data_key] = summed_millis / 1000
-        else:
-            LOGGER.debug(
-                "No sessions from source %s found for time period in Google Fit account.",
-                entity.source,
-            )
+        # Time is in milliseconds, need to convert to seconds
+        self.data[entity.data_key] = summed_millis / 1000
 
     def _parse_point(
         self, entity: LastPointSensorDescription, response: FitnessDataPoint

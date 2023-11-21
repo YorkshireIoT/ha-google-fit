@@ -20,9 +20,7 @@ from .api_types import FitService
 from .const import (
     DEFAULT_ACCESS,
     DOMAIN,
-    CONF_NO_DATA_USE_ZERO,
     DEFAULT_SCAN_INTERVAL,
-    DEFAULT_NO_DATA_USE_ZERO,
 )
 
 
@@ -144,12 +142,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                             CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
                         ),
                     ): config_validation.positive_int,
-                    vol.Required(
-                        CONF_NO_DATA_USE_ZERO,
-                        default=self.config_entry.options.get(
-                            CONF_NO_DATA_USE_ZERO, DEFAULT_NO_DATA_USE_ZERO
-                        ),
-                    ): config_validation.boolean,
                 }
             ),
         )
