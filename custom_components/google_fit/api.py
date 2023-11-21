@@ -164,7 +164,7 @@ class GoogleFitParse:
     ) -> float | None:
         """Get the most recent floating point value.
 
-        N.B. If no data exists in the account return None.
+        If no data exists in the account return None.
         """
         value = None
         data_points = response.get("insertedDataPoint")
