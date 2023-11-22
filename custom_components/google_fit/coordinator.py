@@ -16,7 +16,6 @@ from homeassistant.const import CONF_SCAN_INTERVAL
 
 from .api import AsyncConfigEntryAuth, GoogleFitParse
 from .api_types import (
-    FitService,
     FitnessData,
     FitnessObject,
     FitnessDataPoint,
@@ -97,12 +96,15 @@ class Coordinator(DataUpdateCoordinator):
         now = int(datetime.today().timestamp() * NANOSECONDS_SECONDS_CONVERSION)
         return f"{start}-{now}"
 
-    async def _async_update_data(self) -> FitService | None:
+    async def _async_update_data(self) -> FitnessData | None:
         """Update data via library."""
         LOGGER.debug(
             "Fetching data for account %s",
             self._auth.oauth_session.config_entry.unique_id,
         )
+
+        # Start by initialising data to None
+        self.fitness_data = None
         try:
             async with async_timeout.timeout(30):
                 service = await self._auth.get_resource(self.hass)
@@ -175,8 +177,8 @@ class Coordinator(DataUpdateCoordinator):
                             f"Unknown sensor type for {entity.data_key}. Got: {type(entity)}"
                         )
 
+                # Update globally stored data with fetched and parsed data
                 self.fitness_data = parser.fit_data
-
         except HttpError as err:
             if 400 <= err.status_code < 500:
                 raise ConfigEntryAuthFailed(
@@ -185,3 +187,5 @@ class Coordinator(DataUpdateCoordinator):
             raise err
         except Exception as err:
             raise UpdateFailed(f"Error communicating with API: {err}") from err
+
+        return self.fitness_data
