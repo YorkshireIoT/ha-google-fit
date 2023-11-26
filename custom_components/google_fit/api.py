@@ -35,6 +35,7 @@ class AsyncConfigEntryAuth(OAuthClientAuthHandler):
         oauth2Session: config_entry_oauth2_flow.OAuth2Session,
     ) -> None:
         """Initialise Google Fit Auth."""
+        LOGGER.debug("Initialising Google Fit Authentication Session")
         self.oauth_session = oauth2Session
         self.discovery_cache = SimpleDiscoveryCache()
         super().__init__(websession)
@@ -46,6 +47,7 @@ class AsyncConfigEntryAuth(OAuthClientAuthHandler):
 
     async def check_and_refresh_token(self) -> str:
         """Check the token."""
+        LOGGER.debug("Verifying account access token")
         await self.oauth_session.async_ensure_token_valid()
         return self.access_token
 
@@ -54,7 +56,9 @@ class AsyncConfigEntryAuth(OAuthClientAuthHandler):
 
         try:
             credentials = Credentials(await self.check_and_refresh_token())
+            LOGGER.debug("Successfully retrieved existing access credentials.")
         except RefreshError as ex:
+            LOGGER.warning("Failed to refresh account access token. Starting re-authentication.")
             self.oauth_session.config_entry.async_start_reauth(self.oauth_session.hass)
             raise ex
 
