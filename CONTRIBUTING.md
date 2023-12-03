@@ -19,6 +19,22 @@ Pull requests are the best way to propose changes to the codebase.
 4. Test you contribution.
 5. Issue that pull request!
 
+## Visual Studio Code is the recommended IDE
+
+This repository is built around the developer working in VS Code. It features a devcontainer to
+ensure a consistent development environment for anyone working on the repository.
+
+This devcontainer makes use of a Docker container, which means you will need Docker
+running on your machine as well.
+
+Of course, you're free to develop in any environment you want but the standards at pull request
+are enforced around development in VS Code.
+
+### Getting Started
+
+Follow the official Home Assistant instructions for developers: [Set up Development
+Environment](https://developers.home-assistant.io/docs/development_environment/)
+
 ## Any contributions you make will be under the MIT Software License
 
 In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
