@@ -10,20 +10,14 @@ on:
 
 jobs:
   ruff:
-    name: "Ruff"
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     steps:
-        - name: "Checkout the repository"
-          uses: "actions/checkout@v4.1.1"
+      - uses: actions/checkout@v3
 
-        - name: "Set up Python"
-          uses: actions/setup-python@v5.0.0
-          with:
-            python-version: "3.11"
-            cache: "pip"
+      - name: Ruff Check
+        uses: chartboost/ruff-action@v1
 
-        - name: "Install requirements"
-          run: python3 -m pip install -r requirements.txt
-
-        - name: "Run"
-          run: python3 -m ruff check .
+      - name: Ruff Format
+        uses: chartboost/ruff-action@v1
+        with:
+          args: "format --check"
