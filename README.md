@@ -26,7 +26,7 @@ Platform | Name |Description
 `sensor` | `height` | [Height][height] (metres).
 `sensor` | `weight` | [Weight][weight] (kilograms).
 `sensor` | `body_fat` | [Body Fat][fat] (percentage).
-`sensor` | `body_temperature` | [Body Temperature][temperature] (celcius).
+`sensor` | `body_temperature` | [Body Temperature][temperature] (celsius).
 `sensor` | `steps` | [Number of steps][steps] taken. Reset daily.
 `sensor` | `deep_sleep` | [Deep sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
 `sensor` | `light_sleep` | [Light sleep][sleep] time over the past 24 hours. May not be available depending on sleep data provider.
@@ -62,7 +62,7 @@ Instead, follow the instruction in the Official Home Assistant Docs for [Google 
 
 #### Prerequisites
 
-HACS Installed in Home Assistant: [Home Asssitant Community Store](https://hacs.xyz/)
+HACS Installed in Home Assistant: [Home Assistant Community Store](https://hacs.xyz/)
 
 #### Steps
 
