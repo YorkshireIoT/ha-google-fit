@@ -221,6 +221,18 @@ class Coordinator(DataUpdateCoordinator):
                 # Update globally stored data with fetched and parsed data
                 self.fitness_data = parser.fit_data
 
+                # Google Fit provides us with a total sleep time that also includes
+                # time awake as well. To more accurately reflect actual sleep time
+                # we should readjust this before submitting the data
+                if self.fitness_data is not None:
+                    if (
+                        self.fitness_data["sleepSeconds"] is not None
+                        and self.fitness_data["awakeSeconds"] is not None
+                    ):
+                        self.fitness_data["sleepSeconds"] -= self.fitness_data[
+                            "awakeSeconds"
+                        ]
+
                 # Increment and modulo the counter
                 self.sensor_update_counter = (
                     self.sensor_update_counter + 1
