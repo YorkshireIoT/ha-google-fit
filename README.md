@@ -1,12 +1,15 @@
 # Google Fit Home Assistant Custom Integration
 
 [![GitHub Release][releases-shield]][releases]
+![HA Installs][installs]
 [![GitHub Activity][commits-shield]][commits]
 [![GitHub Downloads][downloads-shield]][downloads-shield]
-[![License][license-shield]](LICENSE)
 
+[![License][license-shield]](LICENSE)
 [![hacs][hacsbadge]][hacs]
+
 ![Project Maintenance][maintenance-shield]
+![GitHub Sponsors][github-sponsors-badge]
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
 This integration interfaces with the [Google Fit REST API][rest-api] to provide Google Fit
@@ -164,6 +167,8 @@ and this should not be hidden.s
 
 ## Adding Multiple Accounts
 
+![Multiple Account](/res/multiple_accounts.png)
+
 Use the following steps to setup additional Google Fit accounts in Home Assistant.
 
 1. Go through all the steps in [Authentication Configuration](#authentication-configuration) for the
@@ -195,20 +200,23 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 ***
 
 [buymecoffee]: https://www.buymeacoffee.com/yorkshireiot
-[buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
-[commits-shield]: https://img.shields.io/github/commit-activity/y/YorkshireIoT/ha-google-fit.svg?style=for-the-badge
+[buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow
+[commits-shield]: https://img.shields.io/github/commit-activity/y/YorkshireIoT/ha-google-fit
 [commits]: https://github.com/YorkshireIoT/ha-google-fit/commits/main
+[github-sponsors]: https://github.com/sponsors/YorkshireIoT
+[github-sponsors-badge]: https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86
 [hacs]: https://github.com/hacs/integration
-[hacsbadge]: https://img.shields.io/badge/HACS-Default-green.svg?style=for-the-badge
+[hacsbadge]: https://img.shields.io/badge/HACS-Default-green
 [discord]: https://discord.gg/Qa5fW2R
-[discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
+[discord-shield]: https://img.shields.io/discord/330944238910963714
 [exampleimg]: example.png
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[downloads-shield]: https://img.shields.io/github/downloads/YorkshireIoT/ha-google-fit/total?style=for-the-badge
+[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen
+[downloads-shield]: https://img.shields.io/github/downloads/YorkshireIoT/ha-google-fit/total
 [forum]: https://community.home-assistant.io/
-[license-shield]: https://img.shields.io/github/license/YorkshireIoT/ha-google-fit.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/badge/maintainer-%20%40YorkshireIoT-blue.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/YorkshireIoT/ha-google-fit.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/YorkshireIoT/ha-google-fit
+[installs]: https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=integration%20usage&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.google_fit.total
+[maintenance-shield]: https://img.shields.io/badge/maintainer-%20%40YorkshireIoT-blue
+[releases-shield]: https://img.shields.io/github/release/YorkshireIoT/ha-google-fit
 [releases]: https://github.com/YorkshireIoT/ha-google-fit/releases
 [rest-api]: https://developers.google.com/fit/rest
 [google-mail]: https://next.home-assistant.io/integrations/google_mail/
