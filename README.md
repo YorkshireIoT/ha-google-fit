@@ -1,15 +1,15 @@
 # Google Fit Home Assistant Custom Integration
 
 [![GitHub Release][releases-shield]][releases]
-![HA Installs][installs]
+[![HA Installs][installs]](https://analytics.home-assistant.io/custom_integrations.json)
 [![GitHub Activity][commits-shield]][commits]
-[![GitHub Downloads][downloads-shield]][downloads-shield]
+[![GitHub Downloads][downloads-shield]][downloads]
 
 [![License][license-shield]](LICENSE)
 [![hacs][hacsbadge]][hacs]
 
-![Project Maintenance][maintenance-shield]
-![GitHub Sponsors][github-sponsors-badge]
+[![Project Maintenance][maintenance-shield]](https://github.com/YorkshireIoT)
+[![GitHub Sponsors][github-sponsors-badge]][github-sponsors]
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
 This integration interfaces with the [Google Fit REST API][rest-api] to provide Google Fit
@@ -212,6 +212,7 @@ If you want to contribute to this please read the [Contribution guidelines](CONT
 [exampleimg]: example.png
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen
 [downloads-shield]: https://img.shields.io/github/downloads/YorkshireIoT/ha-google-fit/total
+[downloads]: https://tooomm.github.io/github-release-stats/?username=YorkshireIot&repository=ha-google-fit
 [forum]: https://community.home-assistant.io/
 [license-shield]: https://img.shields.io/github/license/YorkshireIoT/ha-google-fit
 [installs]: https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=integration%20usage&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.google_fit.total
