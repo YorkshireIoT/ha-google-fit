@@ -226,15 +226,16 @@ class Coordinator(DataUpdateCoordinator):
                 # time awake as well. To more accurately reflect actual sleep time
                 # we should readjust this before submitting the data
                 if self.fitness_data is not None:
+                    sleepSeconds = self.fitness_data.get("sleepSeconds").value
+                    awakeSeconds = self.fitness_data.get("awakeSeconds").value
                     if (
-                        self.fitness_data["sleepSeconds"] is not None
-                        and self.fitness_data["awakeSeconds"] is not None
-                        and self.fitness_data["sleepSeconds"]
-                        >= self.fitness_data["awakeSeconds"]
+                        sleepSeconds is not None
+                        and awakeSeconds is not None
+                        and sleepSeconds >= awakeSeconds
                     ):
-                        self.fitness_data["sleepSeconds"] -= self.fitness_data[
-                            "awakeSeconds"
-                        ]
+                        self.fitness_data.set(
+                            "sleepSeconds", (sleepSeconds - awakeSeconds)
+                        )
 
                 # Increment and modulo the counter
                 self.sensor_update_counter = (

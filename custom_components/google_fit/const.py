@@ -21,6 +21,7 @@ from .api_types import (
     SumPointsSensorDescription,
     LastPointSensorDescription,
     SumSessionSensorDescription,
+    FitnessSensorEnumField,
 )
 
 LOGGER: Logger = getLogger(__package__)
@@ -67,6 +68,39 @@ SLEEP_STAGE: Final = {
     6: "remSleepSeconds",
 }
 
+
+# Blood Glucose Enums. Taken from:
+# https://developers.google.com/fit/datatypes/health#blood_glucose
+BLOOD_GLUCOSE_MEAL_RELATION: Final = {
+    1: "Neither before or after meal",
+    2: "During fasting period",
+    3: "Before a meal",
+    4: "After a meal",
+}
+
+BLOOD_GLUCOSE_MEAL_TYPE: Final = {
+    1: "Unknown",
+    2: "Breakfast",
+    3: "Lunch",
+    4: "Dinner",
+    5: "Snack",
+}
+
+BLOOD_GLUCOSE_SLEEP_RELATION: Final = {
+    1: "Fully awake",
+    2: "Before sleep",
+    3: "After sleep",
+    4: "During sleep",
+}
+
+BLOOD_GLUCOSE_SPECIMEN_SOURCE: Final = {
+    1: "Interstitial fluid",
+    2: "Capillary blood",
+    3: "Plasma",
+    4: "Serum",
+    5: "Tears",
+    6: "Whole blood",
+}
 
 ENTITY_DESCRIPTIONS = (
     SumPointsSensorDescription(
@@ -287,6 +321,18 @@ ENTITY_DESCRIPTIONS = (
         device_class=None,
         source="derived:com.google.blood_glucose:com.google.android.gms:merged",
         data_key="bloodGlucose",
+        enum_fields={
+            "meal_relation": FitnessSensorEnumField(
+                index=1, enum=BLOOD_GLUCOSE_MEAL_RELATION
+            ),
+            "meal_type": FitnessSensorEnumField(index=2, enum=BLOOD_GLUCOSE_MEAL_TYPE),
+            "sleep_relation": FitnessSensorEnumField(
+                index=3, enum=BLOOD_GLUCOSE_SLEEP_RELATION
+            ),
+            "specimen_source": FitnessSensorEnumField(
+                index=4, enum=BLOOD_GLUCOSE_SPECIMEN_SOURCE
+            ),
+        },
     ),
     SumPointsSensorDescription(
         key="google_fit",

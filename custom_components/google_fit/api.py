@@ -101,33 +101,9 @@ class GoogleFitParse:
     data: FitnessData
     unknown_sleep_warn: bool
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialise the data to base value and add a timestamp."""
-        self.data = FitnessData(
-            lastUpdate=datetime.now(),
-            activeMinutes=None,
-            calories=None,
-            basalMetabolicRate=None,
-            distance=None,
-            heartMinutes=None,
-            height=None,
-            weight=None,
-            bodyFat=None,
-            bodyTemperature=None,
-            steps=None,
-            awakeSeconds=0,
-            sleepSeconds=0,
-            lightSleepSeconds=0,
-            deepSleepSeconds=0,
-            remSleepSeconds=0,
-            heartRate=None,
-            heartRateResting=None,
-            bloodPressureSystolic=None,
-            bloodPressureDiastolic=None,
-            bloodGlucose=None,
-            hydration=None,
-            oxygenSaturation=None,
-        )
+        self.data = FitnessData()
         self.unknown_sleep_warn = False
 
     def _sum_points_int(self, response: FitnessObject) -> int:
@@ -254,7 +230,14 @@ class GoogleFitParse:
                     )
                 elif sleep_stage is not None:
                     if end_time >= start_time:
-                        self.data[sleep_stage] += end_time - start_time
+                        currentSleepTime = self.data.get(sleep_stage).value
+                        # Initialise to 0
+                        if currentSleepTime is None:
+                            currentSleepTime = 0
+                        self.data.set(
+                            sleep_stage,
+                            (currentSleepTime + end_time - start_time),
+                        )
                     else:
                         raise UpdateFailed(
                             "Invalid data from Google. End time "
@@ -282,9 +265,9 @@ class GoogleFitParse:
             self._parse_sleep(response)
         else:
             if entity.is_int:
-                self.data[entity.data_key] = self._sum_points_int(response)
+                self.data.set(entity.data_key, self._sum_points_int(response))
             else:
-                self.data[entity.data_key] = self._sum_points_float(response)
+                self.data.set(entity.data_key, self._sum_points_float(response))
 
     def _parse_session(
         self, entity: SumSessionSensorDescription, response: FitnessSessionResponse
@@ -304,20 +287,32 @@ class GoogleFitParse:
             )
 
         # Time is in milliseconds, need to convert to seconds
-        self.data[entity.data_key] = summed_millis / 1000
+        self.data.set(entity.data_key, (summed_millis / 1000))
 
     def _parse_point(
         self, entity: LastPointSensorDescription, response: FitnessDataPoint
     ) -> None:
         """Parse the given single data point from the API according to the passed request_id."""
         if entity.is_int:
-            self.data[entity.data_key] = self._get_latest_data_int(
-                response, entity.index
-            )
+            value = self._get_latest_data_int(response, entity.index)
+            if value:
+                self.data.set(entity.data_key, value)
         else:
-            self.data[entity.data_key] = self._get_latest_data_float(
-                response, entity.index
-            )
+            value = self._get_latest_data_float(response, entity.index)
+            if value:
+                self.data.set(entity.data_key, value)
+
+    def _parse_fields(
+        self, entity: GoogleFitSensorDescription, response: FitnessDataPoint
+    ) -> None:
+        """Parse any additional fields, if defined, for a single data point."""
+        if entity.enum_fields:
+            for key, value in entity.enum_fields.items():
+                enum_field = value.get("enum")
+                # Enums have underlying int type
+                enum_key = self._get_latest_data_int(response, value.get("index"))
+                if enum_key:
+                    self.data.add_field(entity.data_key, key, enum_field[enum_key])
 
     def parse(
         self,

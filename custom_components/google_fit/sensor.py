@@ -60,11 +60,23 @@ class GoogleFitBlueprintSensor(GoogleFitEntity, SensorEntity):
         """Return if entity is available."""
         return self.coordinator.last_update_success
 
+    @property
+    def extra_state_attributes(self) -> dict[str, int | float | str] | None:
+        """Any additional attributes (fields in Google documentation) added for the sensor."""
+        if self.coordinator.current_data is not None:
+            sensorData = self.coordinator.current_data.get(
+                self.entity_description.data_key
+            )
+            if sensorData is not None:
+                return sensorData.attributes
+
     def _read_value(self) -> None:
         if self.coordinator.current_data is not None:
-            value = self.coordinator.current_data.get(self.entity_description.data_key)
-            if value is not None:
-                self._attr_native_value = value
+            sensorData = self.coordinator.current_data.get(
+                self.entity_description.data_key
+            )
+            if sensorData is not None:
+                self._attr_native_value = sensorData.value
                 self.async_write_ha_state()
 
     @callback

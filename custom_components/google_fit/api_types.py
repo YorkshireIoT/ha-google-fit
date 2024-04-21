@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 from typing import TypedDict, Any
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from homeassistant.components.sensor import SensorEntityDescription
 from googleapiclient.discovery import Resource
 from googleapiclient.http import BatchHttpRequest
@@ -16,32 +16,90 @@ class FitService(Resource):
     new_batch_http_request: Callable[[Callable[..., None]], BatchHttpRequest]
 
 
-class FitnessData(TypedDict):
+@dataclass
+class FitFloatSensor:
+    """Represents a sensor with floating-point precision, e.g. height."""
+
+    value: float | None = None
+    attributes: dict[str, int | float | str] = field(
+        default_factory=dict[str, int | float | str]
+    )
+
+
+@dataclass
+class FitIntegerSensor:
+    """Represents a sensor with integer precision, e.g. steps."""
+
+    value: int | None = None
+    attributes: dict[str, int | float | str] = field(
+        default_factory=dict[str, int | float | str]
+    )
+
+
+@dataclass
+class FitnessData:
     """All the fitness data retrieved from the API."""
 
-    lastUpdate: datetime
-    activeMinutes: float | None
-    calories: float | None
-    basalMetabolicRate: float | None
-    distance: float | None
-    heartMinutes: float | None
-    height: float | None
-    weight: float | None
-    bodyFat: float | None
-    bodyTemperature: float | None
-    steps: int | None
-    awakeSeconds: float | None
-    sleepSeconds: float | None
-    lightSleepSeconds: float | None
-    deepSleepSeconds: float | None
-    remSleepSeconds: float | None
-    heartRate: float | None
-    heartRateResting: float | None
-    bloodPressureSystolic: float | None
-    bloodPressureDiastolic: float | None
-    bloodGlucose: float | None
-    hydration: float | None
-    oxygenSaturation: float | None
+    lastUpdate: datetime = datetime.now()
+    activeMinutes: FitFloatSensor = field(default_factory=FitFloatSensor)
+    calories: FitFloatSensor = field(default_factory=FitFloatSensor)
+    basalMetabolicRate: FitFloatSensor = field(default_factory=FitFloatSensor)
+    distance: FitFloatSensor = field(default_factory=FitFloatSensor)
+    heartMinutes: FitFloatSensor = field(default_factory=FitFloatSensor)
+    height: FitFloatSensor = field(default_factory=FitFloatSensor)
+    weight: FitFloatSensor = field(default_factory=FitFloatSensor)
+    bodyFat: FitFloatSensor = field(default_factory=FitFloatSensor)
+    bodyTemperature: FitFloatSensor = field(default_factory=FitFloatSensor)
+    steps: FitIntegerSensor = field(default_factory=FitIntegerSensor)
+    awakeSeconds: FitFloatSensor = field(default_factory=FitFloatSensor)
+    sleepSeconds: FitFloatSensor = field(default_factory=FitFloatSensor)
+    lightSleepSeconds: FitFloatSensor = field(default_factory=FitFloatSensor)
+    deepSleepSeconds: FitFloatSensor = field(default_factory=FitFloatSensor)
+    remSleepSeconds: FitFloatSensor = field(default_factory=FitFloatSensor)
+    heartRate: FitFloatSensor = field(default_factory=FitFloatSensor)
+    heartRateResting: FitFloatSensor = field(default_factory=FitFloatSensor)
+    bloodPressureSystolic: FitFloatSensor = field(default_factory=FitFloatSensor)
+    bloodPressureDiastolic: FitFloatSensor = field(default_factory=FitFloatSensor)
+    bloodGlucose: FitFloatSensor = field(default_factory=FitFloatSensor)
+    hydration: FitFloatSensor = field(default_factory=FitFloatSensor)
+    oxygenSaturation: FitFloatSensor = field(default_factory=FitFloatSensor)
+
+    def get(self, attribute_name: str) -> FitIntegerSensor | FitFloatSensor:
+        """Get the value of the specified attribute."""
+        if attribute_name not in self.__dataclass_fields__:
+            raise KeyError(f"Invalid attribute for FitnessData: {attribute_name}")
+
+        return self.__dataclass_fields__[attribute_name]
+
+    def add_field(
+        self, attribute_name: str, key: str, value: int | float | str
+    ) -> None:
+        """Add an additional field key, value pair to the sensor attributes list."""
+        if attribute_name not in self.__dataclass_fields__:
+            raise KeyError(f"Invalid attribute for FitnessData: {attribute_name}")
+
+        sensorDict: FitFloatSensor | FitIntegerSensor = self.__dataclass_fields__[
+            attribute_name
+        ]
+
+        sensorDict.attributes[key] = value
+
+    def set(self, attribute_name: str, value: int | float) -> None:
+        """Set the value of the specified attribute."""
+        if attribute_name not in self.__dataclass_fields__:
+            raise KeyError(f"Invalid attribute for FitnessData: {attribute_name}")
+
+        sensorDict: FitFloatSensor | FitIntegerSensor = self.__dataclass_fields__[
+            attribute_name
+        ]
+        if isinstance(sensorDict, FitFloatSensor) and isinstance(value, float):
+            sensorDict.value = value
+        elif isinstance(sensorDict, FitIntegerSensor) and isinstance(value, int):
+            sensorDict.value = value
+        else:
+            raise TypeError(
+                f"Cannot set value of type {value} to underlying type {type(sensorDict)}."
+            )
 
 
 class FitnessValue(TypedDict):
@@ -150,7 +208,15 @@ class FitnessSessionResponse(TypedDict):
     session: list[FitnessSession]
 
 
-@dataclass
+class FitnessSensorField(TypedDict):
+    index: int
+
+
+class FitnessSensorEnumField(FitnessSensorField):
+    enum: dict[int, str]
+
+
+@dataclass  # type: ignore
 class GoogleFitSensorDescription(SensorEntityDescription):
     """Extends Sensor Description types to add necessary component values."""
 
@@ -158,9 +224,12 @@ class GoogleFitSensorDescription(SensorEntityDescription):
     source: str = "undefined"
     is_int: bool = False  # If true, data is an integer. Otherwise, data is a float
     infrequent_update: bool = False
+    enum_fields: dict[str, FitnessSensorEnumField] = field(
+        default_factory=dict[str, FitnessSensorEnumField]
+    )
 
 
-@dataclass
+@dataclass  # type: ignore
 class SumPointsSensorDescription(GoogleFitSensorDescription):
     """Represents a sensor where the values are summed over a set time period."""
 
@@ -172,7 +241,7 @@ class SumPointsSensorDescription(GoogleFitSensorDescription):
     is_sleep: bool = False
 
 
-@dataclass
+@dataclass  # type: ignore
 class LastPointSensorDescription(GoogleFitSensorDescription):
     """Represents a sensor which just fetches the latest available data point."""
 
@@ -181,7 +250,7 @@ class LastPointSensorDescription(GoogleFitSensorDescription):
     index: int = 0
 
 
-@dataclass
+@dataclass  # type: ignore
 class SumSessionSensorDescription(GoogleFitSensorDescription):
     """Represents a sensor which just fetches the latest available data point."""
 
