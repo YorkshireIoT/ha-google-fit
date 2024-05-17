@@ -12,6 +12,19 @@
 [![GitHub Sponsors][github-sponsors-badge]][github-sponsors]
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
+> [!CAUTION]
+> Due to Google deprecating the Fit API (see below), Google are blocking
+> any new developers signing up to this API. As such, any **new user** wanting to use
+> this integration who has *not already signed up to the Fit API* will not be able
+> to. To anyone affected by this, I'm as annoyed and disappointed as you ☹️
+
+> [!WARNING]
+> Google is shutting down the [REST API on 30th June 2025](https://developers.google.com/fit).
+> As this integration relies on this API, it will no longer work after this time.
+>
+> Additional information (and maybe solutions if they come along) can be found on
+> [Issue #250](https://github.com/YorkshireIoT/ha-google-fit/issues/250).
+
 This integration interfaces with the [Google Fit REST API][rest-api] to provide Google Fit
 data within Home Assistant.
 
