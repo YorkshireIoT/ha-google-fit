@@ -1,6 +1,14 @@
 # https://www.home-assistant.io/integrations/default_config/
 default_config:
 
+# Allow forwarding so HA can be accessed via GitHub Codespace
+# reverse proxy
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 127.0.0.1
+    - ::1
+
 # https://www.home-assistant.io/integrations/logger/
 logger:
   default: info
