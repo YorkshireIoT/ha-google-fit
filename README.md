@@ -13,17 +13,25 @@
 [![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
 
 > [!CAUTION]
-> Due to Google deprecating the Fit API (see below), Google are blocking
+> **This integration is no longer being actively maintained due to Google pulling the Fit API**
+>
+> #### What's the alternative?
+>
+> For users who want health data in Home Assistant, it is recommended to use the Android companion
+> app, enabling the [Health Connect Sensors](https://companion.home-assistant.io/docs/core/sensors#health-connect-sensors).
+> The Home Assistant developers have put in a lot of effort to link into Health Connect, and at the time of writing
+> 12 sensors are supported. For further support, please raise an issue here:
+> [https://github.com/home-assistant/android](https://github.com/home-assistant/android)
+>
+> #### Further Information
+> 
+> Due to the deprecation of the Fit API (see below), Google are blocking
 > any new developers signing up to this API. As such, any **new user** wanting to use
 > this integration who has *not already signed up to the Fit API* will not be able
 > to. To anyone affected by this, I'm as annoyed and disappointed as you ☹️
-
-> [!WARNING]
-> Google is shutting down the [REST API on 30th June 2025](https://developers.google.com/fit).
-> As this integration relies on this API, it will no longer work after this time.
 >
-> Additional information (and maybe solutions if they come along) can be found on
-> [Issue #250](https://github.com/YorkshireIoT/ha-google-fit/issues/250).
+> Additionally, Google is shutting down the [REST API on 30th June 2025](https://developers.google.com/fit).
+> As this integration relies on this API, it will no longer work after this time.
 
 This integration interfaces with the [Google Fit REST API][rest-api] to provide Google Fit
 data within Home Assistant.
